@@ -21,7 +21,7 @@ cover: /covers/roadmap.svg
 | 域名 | `fanwentao.cn` 主站（十年）+ `fanwentao.com` 预备役（两年），均已注册。NS 已从 DNSPod 切到 Vercel（`ns1/ns2.vercel-dns.com`），等全球 DNS 刷新后 Vercel 自动签发 SSL 证书 |
 | 分页 | `PER_PAGE = 5`，首页 / 分类页 / 标签页三处都已分页，页码窗口化 |
 | 评论 | giscus 已启用，`COMMENTS.enabled = true`，仓库 `yaole2661/wentao-blog`，分区 `General` |
-| 部署 | Vercel 项目 `wentao-blog` 已创建，首次部署 Ready（`wentao-blog.vercel.app`）。自定义域名 `fanwentao.cn` 已挂到项目，等 DNS 刷新后证书签发。GitHub 自动部署联动待配 |
+| 部署 | Vercel 项目 `wentao-blog` 已创建，首次部署 Ready（`wentao-blog.vercel.app`）。自定义域名 `fanwentao.cn` 已挂到项目，等 DNS 刷新后证书签发。GitHub 自动部署已联动，push 即触发新部署 |
 
 ## 一、P0：上线前必须做的三件事
 
@@ -36,7 +36,7 @@ cover: /covers/roadmap.svg
 
 同批还有两件小事：① `SITE.author` / `description` / 关于页的「姚乐」统一改成 `Wentao`（只留名，让站点品牌与 URL 一致）；② 两个域名的安全开关保持一致：都开「禁止转移锁 + 自动续费」，都不开「禁止更新锁」（后者会锁掉 NS 修改，纯添乱）。
 
-### 2. 仓库 + 部署 + 评论，是同一条链 ✅（GitHub 自动部署联动待配）
+### 2. 仓库 + 部署 + 评论，是同一条链 ✅
 
 顺序上有依赖关系，一次做完：
 
@@ -108,7 +108,7 @@ cover: /covers/roadmap.svg
          ✅ git push → Vercel 项目创建 → Discussions + giscus → COMMENTS.enabled = true
          ✅ NS 从 DNSPod 切到 Vercel（ns1/ns2.vercel-dns.com）
          ⏳ 等 DNS 刷新 → Vercel 签发证书 → https://fanwentao.cn 可访问
-         ⏳ Vercel 连接 GitHub（Login Connections → Connect to GitHub）→ push 自动部署
+         ✅ Vercel 已连接 GitHub，push 自动部署已验证
          ⏳ Google Search Console / Bing Webmaster 提交 sitemap
          fanwentao.com 上线后 301 → .cn（预备役，先空置）
 第一周   统计脚本 · iOS/微信真机 · 404 自测 · RSS 校验器

@@ -18,12 +18,12 @@ cover: /covers/roadmap.svg
 | 框架 | Astro 5（`output: 'static'`），插件只有 `@astrojs/sitemap` 与 `@astrojs/rss` |
 | 运行时 JS | 4 处：主题切换、站内搜索过滤、目录滚动高亮、giscus iframe。**没有任何前端框架，零 Island** |
 | 内容量 | 7 篇文章 → 43 个静态页，构建约 2 秒，零 warning |
-| 域名 | `fanwentao.cn` 主站（十年）+ `fanwentao.com` 预备役（两年），均已注册。NS 已从 DNSPod 切到 Vercel（`ns1/ns2.vercel-dns.com`），等全球 DNS 刷新后 Vercel 自动签发 SSL 证书 |
+| 域名 | `fanwentao.cn` 主站（十年）+ `fanwentao.com` 预备役（两年），均已注册。NS 已切到 Vercel，DNS 刷新完成，SSL 证书已签发，`https://fanwentao.cn` 正式上线 |
 | 分页 | `PER_PAGE = 5`，首页 / 分类页 / 标签页三处都已分页，页码窗口化 |
 | 评论 | giscus 已启用，`COMMENTS.enabled = true`，仓库 `yaole2661/wentao-blog`，分区 `General` |
-| 部署 | Vercel 项目 `wentao-blog` 已创建，首次部署 Ready（`wentao-blog.vercel.app`）。自定义域名 `fanwentao.cn` 已挂到项目，等 DNS 刷新后证书签发。GitHub 自动部署已联动，push 即触发新部署 |
+| 部署 | Vercel 项目 `wentao-blog`，`https://fanwentao.cn` 已上线。GitHub 自动部署已联动，push 即触发新部署 |
 
-## 一、P0：上线前必须做的三件事
+## 一、P0：上线前必须做的三件事 ✅
 
 ### 1. 域名已定：主站 `fanwentao.cn`，两处 URL 待同改 ✅
 
@@ -53,7 +53,7 @@ cover: /covers/roadmap.svg
 
 顺带：文章页 `og:image` 引用的封面 SVG 是 640×300（比例 2.13:1），而 OG 规范建议 1200×630（1.91:1），社交平台裁切时会切掉左右各约一成。**要么把封面 viewBox 改成 1200×630，要么单独出一张 OG 图**——这条我暂时只做记录，不动手，等有真实分享需求再改。
 
-## 二、P1：上线后第一周
+## 二、P1：上线后第一周（当前阶段）
 
 1. **访问统计。** GoatCounter / Umami 都只需一段 script，但要清楚：它是这个站点的**第 5 个第三方运行时**，与「零 Island」的取舍是明确的。建议只统计页面路径，不接任何识别型标识。
 2. **真机过一遍。** 重点三处：iOS Safari 深色模式下评论区与封面是否跟着变（giscus 主题靠 `postMessage` 同步，已实现，但只在真机上才能确认）；微信内置浏览器打开时的分享卡片；小屏下汉堡菜单与分页条的换行。
@@ -106,8 +106,7 @@ cover: /covers/roadmap.svg
 ```
 上线前   ✅ 两处 URL 同改为 https://fanwentao.cn + 署名统一 Wentao + robots.txt
          ✅ git push → Vercel 项目创建 → Discussions + giscus → COMMENTS.enabled = true
-         ✅ NS 从 DNSPod 切到 Vercel（ns1/ns2.vercel-dns.com）
-         ⏳ 等 DNS 刷新 → Vercel 签发证书 → https://fanwentao.cn 可访问
+         ✅ NS 从 DNSPod 切到 Vercel → DNS 刷新完成 → SSL 证书签发 → 正式上线
          ✅ Vercel 已连接 GitHub，push 自动部署已验证
          ⏳ Google Search Console / Bing Webmaster 提交 sitemap
          fanwentao.com 上线后 301 → .cn（预备役，先空置）
@@ -117,4 +116,4 @@ cover: /covers/roadmap.svg
 永不     自建评论 · CMS · i18n · 框架 Island
 ```
 
-这份清单的盲区正在缩小：Vercel 构建已验证通过（13 秒、零 error），DNS 切换也已执行。剩下的两个待验证项是「DNS 全球刷新需要多久」和「国内访问速度如何」——前者等 NS 生效后自动解决，后者要等域名能打开后实测。
+这份清单的盲区已基本消除：Vercel 构建已验证通过（6 秒、零 error），DNS 切换已完成并生效，SSL 证书已签发，`https://fanwentao.cn` 正式上线。唯一还没实测的是「国内访问速度」，需等国内 DNS 缓存完全刷新后用手机验证。

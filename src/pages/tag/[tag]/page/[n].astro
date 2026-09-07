@@ -1,0 +1,35 @@
+---
+import ListPage from '../../../../layouts/ListPage.astro';
+import { getPosts, postsByTag, tagUrl, paginate, type Post } from '../../../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  const paths: { params: { tag: string; n: string }; props: { posts: Post[] } }[] = [];
+  // 第 1 页由 tag/[tag].astro 负责，这里只产出各标签第 2 页起
+  for (const tag of new Set(posts.flatMap((p) => p.data.tags))) {
+    const { totalPages } = paginate(postsByTag(posts, tag), 1);
+    for (let n = 2; n <= totalPages; n++) {
+      paths.push({ params: { tag, n: String(n) }, props: { posts } });
+    }
+  }
+  return paths;
+}
+
+const { posts } = Astro.props;
+const tag = Astro.params.tag!;
+const { items, page, totalPages, total } = paginate(postsByTag(posts, decodeURIComponent(tag)), Number(Astro.params.n));
+const base = tagUrl(tag);
+---
+<ListPage
+  title={`#${tag} · 第 ${page} 页`}
+  description={`标签 #${tag} 下的全部文章。`}
+  kicker="标签"
+  heading={`#${tag}`}
+  intro={`标签 #${tag} 下共 ${total} 篇文章。`}
+  posts={items}
+  {base}
+  {page}
+  {totalPages}
+  {total}
+  chips={false}
+/>

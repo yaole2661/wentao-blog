@@ -1,0 +1,30 @@
+---
+import ListPage from '../../layouts/ListPage.astro';
+import { getPosts, postsByTag, tagUrl, paginate } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  const tags = new Set<string>();
+  for (const p of posts) for (const t of p.data.tags) tags.add(t);
+  return [...tags].map((tag) => ({ params: { tag }, props: { posts } }));
+}
+
+const { posts } = Astro.props;
+const tag = Astro.params.tag!;
+const { items, page, totalPages, total } = paginate(postsByTag(posts, decodeURIComponent(tag)), 1);
+const base = tagUrl(tag);
+---
+<ListPage
+  title={`#${tag}`}
+  description={`标签 #${tag} 下的全部文章。`}
+  kicker="标签"
+  heading={`#${tag}`}
+  intro={`标签 #${tag} 下共 ${total} 篇文章。`}
+  posts={items}
+  {base}
+  {page}
+  {totalPages}
+  {total}
+  chips={false}
+  emptyText={`标签 #${tag} 下暂时还没有文章。`}
+/>

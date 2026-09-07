@@ -1,0 +1,62 @@
+---
+import { pageUrl } from '../lib/posts';
+
+interface Props {
+  base: string;
+  page: number;
+  totalPages: number;
+  total: number;
+}
+
+const { base, page, totalPages, total } = Astro.props;
+
+/**
+ * 页码窗口：首页 + 当前页 ±1 + 末页，缺口用省略号（形如 1 … 4 5 6 … 27）。
+ * 页数少时自然退化为全平铺。
+ */
+function pageWindow(current: number, last: number, delta = 1): (number | 'ellipsis')[] {
+  const left = Math.max(1, current - delta);
+  const right = Math.min(last, current + delta);
+  const out: (number | 'ellipsis')[] = [];
+  if (left > 1) {
+    out.push(1);
+    if (left > 2) out.push('ellipsis');
+  }
+  for (let n = left; n <= right; n++) out.push(n);
+  if (right < last) {
+    if (right < last - 1) out.push('ellipsis');
+    out.push(last);
+  }
+  return out;
+}
+
+const pages = pageWindow(page, totalPages);
+---
+{totalPages > 1 ? (
+  <div class="pager">
+    <span class="pager-info">共 {total} 篇 · 第 {page} / {totalPages} 页</span>
+    {page > 1 ? (
+      <a href={pageUrl(base, page - 1)} rel="prev">上一页</a>
+    ) : (
+      <span class="pager-disabled" aria-hidden="true">上一页</span>
+    )}
+    {pages.map((n) =>
+      n === 'ellipsis' ? (
+        <span class="pager-ellipsis" aria-hidden="true">…</span>
+      ) : n === page ? (
+        <span class="pager-current" aria-current="page">{n}</span>
+      ) : (
+        <a href={pageUrl(base, n)}>{n}</a>
+      )
+    )}
+    {page < totalPages ? (
+      <a href={pageUrl(base, page + 1)} rel="next">下一页</a>
+    ) : (
+      <span class="pager-disabled" aria-hidden="true">下一页</span>
+    )}
+  </div>
+) : (
+  <div class="pager">
+    <span class="pager-info">共 {total} 篇</span>
+  </div>
+)}

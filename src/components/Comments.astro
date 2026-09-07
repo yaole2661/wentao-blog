@@ -1,0 +1,58 @@
+---
+// Comments.astro — 评论区（giscus：以 GitHub Discussions 为后端，零运维、无需自建服务）
+//
+// 启用步骤（一次性）：
+//   1. 在博客仓库开启 Discussions，并安装 giscus 应用：
+//      https://github.com/apps/giscus
+//   2. 打开 https://giscus.app/zh-CN ，填入仓库名，页面会给出 4 个 ID
+//   3. 把 src/site.ts 里的 COMMENTS 改成 { enabled: true, repo, repoId, category, categoryId }
+//
+// 未配置时整块不渲染：避免带着 your-xxx 占位值发出必然 404 的第三方请求。
+import { COMMENTS } from '../site';
+
+// 开了开关却没填 ID：giscus 只会在 iframe 里静默报错，不如构建期直接失败。
+if (COMMENTS.enabled && (!COMMENTS.repo || !COMMENTS.repoId || !COMMENTS.categoryId)) {
+  throw new Error(
+    'COMMENTS.enabled = true，但 src/site.ts 的 repo / repoId / categoryId 未填齐（见 giscus.app）'
+  );
+}
+---
+
+{COMMENTS.enabled ? (
+  <section class="comments" id="comments">
+    <h2 class="comments-title">评论</h2>
+    <div
+      class="giscus"
+      data-repo={COMMENTS.repo}
+      data-repo-id={COMMENTS.repoId}
+      data-category={COMMENTS.category}
+      data-category-id={COMMENTS.categoryId}
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-lang="zh-CN"
+      data-loading="lazy"
+    ></div>
+    <noscript>
+      <p class="comments-note">评论基于 GitHub Discussions，需要启用 JavaScript 才能查看和发表。</p>
+    </noscript>
+    <script is:inline>
+      (function () {
+        var host = document.querySelector('.giscus');
+        if (!host) return;
+        var s = document.createElement('script');
+        s.src = 'https://giscus.app/client.js';
+        s.async = true;
+        s.crossOrigin = 'anonymous';
+        Array.prototype.forEach.call(host.attributes, function (a) {
+          s.setAttribute(a.name, a.value);
+        });
+        s.setAttribute('data-theme',
+          document.documentElement.getAttribute('data-theme') === 'dark' ? 'transparent_dark' : 'light');
+        host.appendChild(s);
+      })();
+    </script>
+  </section>
+) : null}

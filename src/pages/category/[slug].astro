@@ -1,0 +1,30 @@
+---
+import ListPage from '../../layouts/ListPage.astro';
+import { getPosts, postsByCategory, categoryUrl, paginate } from '../../lib/posts';
+import { CATEGORIES } from '../../site';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return Object.keys(CATEGORIES).map((slug) => ({ params: { slug }, props: { posts } }));
+}
+
+const { posts } = Astro.props;
+const slug = Astro.params.slug!;
+const label = CATEGORIES[slug as keyof typeof CATEGORIES];
+const { items, page, totalPages, total } = paginate(postsByCategory(posts, slug), 1);
+const base = categoryUrl(slug);
+---
+<ListPage
+  title={label}
+  description={`${label} 主题下的全部文章。`}
+  kicker="主题分类"
+  heading={label}
+  intro={`${label}：本分类下共 ${total} 篇文章。`}
+  posts={items}
+  {base}
+  {page}
+  {totalPages}
+  {total}
+  activeCat={slug}
+  emptyText={`「${label}」下暂时还没有文章。`}
+/>

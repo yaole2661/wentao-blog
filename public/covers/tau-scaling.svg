@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" width="640" height="300" role="img" aria-label="华为 τ 缩放定律 封面">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#251f5c"/>
+      <stop offset="0.55" stop-color="#3C3489"/>
+      <stop offset="1" stop-color="#534AB7"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="300" fill="url(#bg)"/>
+  <g stroke="#ffffff" stroke-opacity="0.12" stroke-width="1">
+    <path d="M0 240h640M0 180h640M0 120h640"/>
+    <path d="M120 0v300M240 0v300M360 0v300M480 0v300"/>
+  </g>
+  <g fill="none" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2">
+    <path d="M398 96h74v40h74v40h74"/>
+    <path d="M398 176h74v40h74"/>
+    <circle cx="398" cy="96" r="5" fill="#ffffff" fill-opacity="0.75"/>
+    <circle cx="620" cy="176" r="5" fill="#ffffff" fill-opacity="0.75"/>
+    <circle cx="546" cy="216" r="5" fill="#ffffff" fill-opacity="0.75"/>
+  </g>
+  <text x="470" y="252" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Consolas,monospace" font-size="16" fill="#d9d5ff">τ = RC</text>
+  <text x="40" y="128" font-family="-apple-system,Segoe UI,PingFang SC,Microsoft YaHei,sans-serif" font-size="46" font-weight="800" fill="#ffffff" letter-spacing="1">τ Scaling</text>
+  <text x="40" y="168" font-family="-apple-system,Segoe UI,PingFang SC,Microsoft YaHei,sans-serif" font-size="21" fill="#d9d5ff">用「时间」改写「几何」</text>
+  <g>
+    <rect x="40" y="196" width="96" height="30" rx="15" fill="#ffffff" fill-opacity="0.16"/>
+    <text x="88" y="216" text-anchor="middle" font-family="-apple-system,Segoe UI,PingFang SC,Microsoft YaHei,sans-serif" font-size="15" fill="#ffffff">企业研究</text>
+  </g>
+</svg>

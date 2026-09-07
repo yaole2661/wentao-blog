@@ -1,0 +1,82 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import Pager from '../components/Pager.astro';
+import { categoryUrl, type Post } from '../lib/posts';
+import { CATEGORIES, SITE } from '../site';
+
+interface Props {
+  /** 文档标题（含站点名拼接交给 BaseLayout） */
+  title: string;
+  description?: string;
+  /** 头部徽标行 */
+  kicker?: string;
+  /** 大标题；缺省用 title */
+  heading?: string;
+  intro?: string;
+  posts: Post[];
+  /** 分页基准路径，如 "/" 或 "/category/ai/" */
+  base: string;
+  page?: number;
+  totalPages?: number;
+  /** 全部条数；分页后 posts 只是当前页，缺省按 posts.length 计 */
+  total?: number;
+  activeCat?: string;
+  /** 是否渲染分类筛选条 */
+  chips?: boolean;
+  emptyText?: string;
+}
+
+const {
+  title,
+  description = SITE.description,
+  kicker = '底层硬 · 表达软',
+  heading,
+  intro,
+  posts,
+  base,
+  page = 1,
+  totalPages = 1,
+  total = posts.length,
+  activeCat = 'all',
+  chips = true,
+  emptyText = '这里还没有文章。',
+} = Astro.props;
+---
+<BaseLayout title={title} description={description}>
+  {heading || intro ? (
+    <section class="page-head">
+      {kicker && <span class="kicker">{kicker}</span>}
+      <h1>{heading ?? title}</h1>
+      {intro && <p>{intro}</p>}
+    </section>
+  ) : (
+    <section class="hero">
+      <span class="kicker">{kicker}</span>
+      <h1>{heading ?? title}</h1>
+      {intro && <p>{intro}</p>}
+    </section>
+  )}
+
+  <div class="toolbar">
+    {chips && (
+      <div class="chips">
+        <a class:list={['chip', { active: activeCat === 'all' }]} href="/">全部</a>
+        {Object.entries(CATEGORIES).map(([key, label]) => (
+          <a class:list={['chip', { active: activeCat === key }]} href={categoryUrl(key)}>{label}</a>
+        ))}
+      </div>
+    )}
+    <span class="count">共 {total} 篇</span>
+  </div>
+
+  {posts.length > 0 ? (
+    <div class="grid">
+      {posts.map((post) => <PostCard {post} />)}
+    </div>
+  ) : (
+    <div class="empty">{emptyText}</div>
+  )}
+
+  <Pager {base} {page} {totalPages} {total} />
+</BaseLayout>

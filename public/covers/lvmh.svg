@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" width="640" height="300" role="img" aria-label="LVMH 深度研究手册 封面">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#251f5c"/>
+      <stop offset="0.55" stop-color="#3C3489"/>
+      <stop offset="1" stop-color="#534AB7"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="300" fill="url(#bg)"/>
+  <g stroke="#ffffff" stroke-opacity="0.12" stroke-width="1">
+    <path d="M0 240h640M0 180h640M0 120h640"/>
+    <path d="M120 0v300M240 0v300M360 0v300M480 0v300"/>
+  </g>
+  <g fill="none" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2">
+    <rect x="410" y="96" width="52" height="104" rx="4"/>
+    <rect x="470" y="64" width="52" height="136" rx="4"/>
+    <rect x="530" y="128" width="52" height="72" rx="4"/>
+    <path d="M410 210h182" stroke-opacity="0.65"/>
+  </g>
+  <text x="40" y="128" font-family="-apple-system,Segoe UI,PingFang SC,Microsoft YaHei,sans-serif" font-size="46" font-weight="800" fill="#ffffff" letter-spacing="1">LVMH</text>
+  <text x="40" y="168" font-family="-apple-system,Segoe UI,PingFang SC,Microsoft YaHei,sans-serif" font-size="21" fill="#d9d5ff">奢侈品帝国的收购逻辑</text>
+  <g>
+    <rect x="40" y="196" width="96" height="30" rx="15" fill="#ffffff" fill-opacity="0.16"/>
+    <text x="88" y="216" text-anchor="middle" font-family="-apple-system,Segoe UI,PingFang SC,Microsoft YaHei,sans-serif" font-size="15" fill="#ffffff">企业研究</text>
+  </g>
+</svg>

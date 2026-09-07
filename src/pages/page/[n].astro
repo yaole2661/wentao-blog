@@ -1,0 +1,32 @@
+---
+import ListPage from '../../layouts/ListPage.astro';
+import { getPosts, paginate } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  const { totalPages } = paginate(posts, 1);
+  const paths = [];
+  // 第 1 页由 src/pages/index.astro 负责，这里只产出第 2 页起
+  for (let n = 2; n <= totalPages; n++) {
+    paths.push({ params: { n: String(n) }, props: { posts, totalPages } });
+  }
+  return paths;
+}
+
+const { posts, totalPages } = Astro.props;
+const page = Number(Astro.params.n);
+const { items } = paginate(posts, page);
+---
+<ListPage
+  title={`文章列表 · 第 ${page} 页`}
+  description="Wentao's blog 全部文章列表。"
+  kicker="全部文章"
+  heading="Wentao's blog"
+  intro="企业研究与前沿 AI 双线沉淀，按发布时间倒序。"
+  posts={items}
+  base="/"
+  {page}
+  {totalPages}
+  total={posts.length}
+  activeCat="all"
+/>

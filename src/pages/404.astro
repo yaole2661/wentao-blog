@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPosts, postUrl } from '../lib/posts';
+
+const posts = await getPosts();
+const latest = posts.slice(0, 5);
+---
+<BaseLayout title="页面不存在" description="你访问的页面不存在。">
+  <section class="page-head">
+    <span class="kicker">404</span>
+    <h1>这个页面找不到了</h1>
+    <p>链接可能已失效，或者地址拼错了。可以回<a href="/">首页</a>，或按下面入口继续浏览。</p>
+  </section>
+
+  <div class="toolbar">
+    <div class="chips">
+      <a class="chip" href="/archive/">归档</a>
+      <a class="chip" href="/tags/">标签</a>
+      <a class="chip" href="/search/">搜索</a>
+      <a class="chip" href="/about/">关于</a>
+    </div>
+  </div>
+
+  {latest.length > 0 && (
+    <section class="notfound-latest">
+      <h2>最新文章</h2>
+      <ul class="topic-list">
+        {latest.map((post) => (
+          <li>
+            <a href={postUrl(post.id)}>{post.data.title}</a>
+            <span class="topic-date">{post.data.date.getFullYear()}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+</BaseLayout>

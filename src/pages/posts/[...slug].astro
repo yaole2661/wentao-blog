@@ -1,0 +1,139 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Comments from '../../components/Comments.astro';
+import { getPosts, categoryUrl, postUrl, tagUrl } from '../../lib/posts';
+import { categoryLabel, formatDate, SITE } from '../../site';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+const { title, date, updated, category, tags, summary, aiSummary, cover } = post.data;
+const label = categoryLabel(category);
+const tocItems = headings.filter((h) => h.depth <= 2);
+
+const allPosts = await getPosts();
+// 相关推荐：共享标签权重 2，同分类权重 1，再按时间倒序打破平手
+const related = allPosts
+  .filter((p) => p.id !== post.id)
+  .map((p) => {
+    const shared = p.data.tags.filter((t) => tags.includes(t)).length;
+    const sameCat = p.data.category === category ? 1 : 0;
+    return { p, score: shared * 2 + sameCat };
+  })
+  .filter((x) => x.score > 0)
+  .sort(
+    (a, b) => b.score - a.score || b.p.data.date.getTime() - a.p.data.date.getTime()
+  )
+  .slice(0, 3)
+  .map((x) => x.p);
+
+const url = postUrl(post.id);
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description: summary || SITE.description,
+  datePublished: date.toISOString(),
+  ...(updated ? { dateModified: updated.toISOString() } : {}),
+  author: { '@type': 'Person', name: SITE.author },
+  publisher: { '@type': 'Organization', name: SITE.name },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': new URL(url, SITE.url).href },
+  keywords: tags.join(', '),
+};
+---
+<BaseLayout
+  title={title}
+  description={summary || `${title} · ${SITE.name}`}
+  path={url}
+  article
+  publishDate={date}
+  image={cover}
+>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <div class="layout">
+    <aside class="toc-side">
+      {tocItems.length > 0 && (
+        <>
+          <div class="toc-title">目录</div>
+          <ol>
+            {tocItems.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}
+          </ol>
+        </>
+      )}
+    </aside>
+
+    <article class="post-main">
+      <a class="btn-back" href={categoryUrl(category)}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        返回{label}
+      </a>
+      <div class="post">
+        <h1>{title}</h1>
+        <div class="post-meta">
+          <a class="pm-cat" href={categoryUrl(category)}>{label}</a>
+          <span>·</span>
+          <time datetime={date.toISOString()}>{formatDate(date)}</time>
+          {updated && (<><span>·</span><span>更新于 {formatDate(updated)}</span></>)}
+        </div>
+        {cover ? (
+          <img class="cover" src={cover} alt={title} width="1200" height="630" decoding="async" />
+        ) : (
+          <div class="cover">{label}</div>
+        )}
+        {summary && (
+          <div class="post-summary">
+            {aiSummary && <span class="summary-badge">AI 生成摘要</span>}
+            <p>{summary}</p>
+            {aiSummary && <span class="summary-note">此摘要由 AI 生成，仅供参考，观点与事实以正文为准。</span>}
+          </div>
+        )}
+        {tags.length > 0 && (
+          <div class="tags post-tags">
+            {tags.map((t) => <a class="tag" href={tagUrl(t)}>#{t}</a>)}
+          </div>
+        )}
+        <div class="prose"><Content /></div>
+        <p class="post-foot">本文首发于 <a href={new URL(url, SITE.url).href}>{SITE.name}</a>，永久链接：<code>{new URL(url, SITE.url).href}</code></p>
+        {related.length > 0 && (
+          <section class="related">
+            <h3>相关文章</h3>
+            <div class="related-grid">
+              {related.map((r) => (
+                <a class="related-card" href={postUrl(r.id)}>
+                  <div class="rc-cat">{categoryLabel(r.data.category)}</div>
+                  <div class="rc-title">{r.data.title}</div>
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
+        <Comments />
+      </div>
+    </article>
+  </div>
+</BaseLayout>
+
+<script>
+  // 目录滚动高亮：只有 h2 参与（与 tocItems 的 depth<=2 一致）
+  const links = [...document.querySelectorAll<HTMLElement>('.toc-side a')];
+  if (links.length) {
+    const map = new Map(links.map((a) => [a.getAttribute('href')?.slice(1), a]));
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const en of entries) {
+          if (!en.isIntersecting) continue;
+          links.forEach((l) => l.classList.remove('active'));
+          map.get(en.target.id)?.classList.add('active');
+        }
+      },
+      { rootMargin: '-80px 0px -70% 0px' }
+    );
+    document.querySelectorAll('.prose h2').forEach((h) => obs.observe(h));
+  }
+</script>

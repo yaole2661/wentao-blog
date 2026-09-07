@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" width="640" height="300" role="img" aria-label="A2UI 协议详解 封面">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#083f2d"/>
+      <stop offset="0.55" stop-color="#0b6e4f"/>
+      <stop offset="1" stop-color="#1f9d7a"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="300" fill="url(#bg)"/>
+  <g stroke="#ffffff" stroke-opacity="0.10" stroke-width="1">
+    <path d="M0 240h640M0 180h640M0 120h640"/>
+    <path d="M120 0v300M240 0v300M360 0v300M480 0v300"/>
+  </g>
+  <g fill="none" stroke="#ffffff" stroke-opacity="0.55" stroke-width="2">
+    <rect x="392" y="72" width="96" height="70" rx="10"/>
+    <rect x="516" y="160" width="96" height="70" rx="10"/>
+    <path d="M440 142v46a24 24 0 0 0 24 24h52"/>
+    <circle cx="440" cy="142" r="4" fill="#ffffff" fill-opacity="0.7"/>
+    <circle cx="516" cy="195" r="4" fill="#ffffff" fill-opacity="0.7"/>
+  </g>
+  <text x="392" y="115" font-family="ui-monospace,SFMono-Regular,Consolas,monospace" font-size="17" fill="#e7fff4">{"type"}</text>
+  <text x="516" y="203" font-family="ui-monospace,SFMono-Regular,Consolas,monospace" font-size="17" fill="#e7fff4">{"render"}</text>
+  <text x="40" y="128" font-family="-apple-system,Segoe UI,PingFang SC,Microsoft YaHei,sans-serif" font-size="46" font-weight="800" fill="#ffffff" letter-spacing="1">A2UI</text>
+  <text x="40" y="168" font-family="-apple-system,Segoe UI,PingFang SC,Microsoft YaHei,sans-serif" font-size="21" fill="#d4f5e6">Agent 与用户界面的新范式</text>
+  <g>
+    <rect x="40" y="196" width="82" height="30" rx="15" fill="#ffffff" fill-opacity="0.16"/>
+    <text x="81" y="216" text-anchor="middle" font-family="-apple-system,Segoe UI,PingFang SC,Microsoft YaHei,sans-serif" font-size="15" fill="#ffffff">前沿 AI</text>
+  </g>
+</svg>

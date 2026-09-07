@@ -1,0 +1,45 @@
+---
+import type { Post } from '../lib/posts';
+import { postUrl } from '../lib/posts';
+import { categoryLabel, formatDate } from '../site';
+
+interface Props {
+  post: Post;
+  /** 列表页高亮关键词（搜索结果用），为空则不包裹 */
+  highlight?: string;
+}
+
+const { post } = Astro.props;
+const { title, date, category, tags, summary, cover } = post.data;
+const href = postUrl(post.id);
+const label = categoryLabel(category);
+
+// 关键词高亮：仅处理标题，且先转义再插入 <mark>，避免注入
+function mark(text: string): string {
+  const q = Astro.props.highlight?.trim();
+  const esc = text.replace(/[&<>"']/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!
+  );
+  if (!q) return esc;
+  const safe = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return esc.replace(new RegExp(`(${safe})`, 'gi'), '<mark>$1</mark>');
+}
+---
+<a class:list={['card', category]} href={href}>
+  {cover ? (
+    <img class="cover" src={cover} alt={title} loading="lazy" decoding="async" width="640" height="300" />
+  ) : (
+    <div class="cover">{label}</div>
+  )}
+  <div class="card-body">
+    <div class="card-meta">{label} · {formatDate(date)}</div>
+    <h3 set:html={mark(title)} />
+    {summary && <p>{summary}</p>}
+    {tags.length > 0 && (
+      <div class="tags">
+        {tags.map((t) => <span class="tag">#{t}</span>)}
+      </div>
+    )}
+    <div class="card-read">阅读 →</div>
+  </div>
+</a>

@@ -1,0 +1,37 @@
+---
+import ListPage from '../../../../layouts/ListPage.astro';
+import { getPosts, postsByCategory, categoryUrl, paginate } from '../../../../lib/posts';
+import { CATEGORIES } from '../../../../site';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  const paths: { params: { slug: string; n: string }; props: { posts: Awaited<ReturnType<typeof getPosts>> } }[] = [];
+  // 第 1 页由 category/[slug].astro 负责，这里只产出各分类第 2 页起
+  for (const slug of Object.keys(CATEGORIES)) {
+    const { totalPages } = paginate(postsByCategory(posts, slug), 1);
+    for (let n = 2; n <= totalPages; n++) {
+      paths.push({ params: { slug, n: String(n) }, props: { posts } });
+    }
+  }
+  return paths;
+}
+
+const { posts } = Astro.props;
+const slug = Astro.params.slug!;
+const label = CATEGORIES[slug as keyof typeof CATEGORIES];
+const { items, page, totalPages, total } = paginate(postsByCategory(posts, slug), Number(Astro.params.n));
+const base = categoryUrl(slug);
+---
+<ListPage
+  title={`${label} · 第 ${page} 页`}
+  description={`${label} 主题下的全部文章。`}
+  kicker="主题分类"
+  heading={label}
+  intro={`${label}：本分类下共 ${total} 篇文章。`}
+  posts={items}
+  {base}
+  {page}
+  {totalPages}
+  {total}
+  activeCat={slug}
+/>

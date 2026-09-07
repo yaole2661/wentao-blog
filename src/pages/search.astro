@@ -1,0 +1,110 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="搜索" description="按标题、摘要、标签检索全站文章。">
+  <section class="page-head">
+    <span class="kicker">检索</span>
+    <h1>搜索文章</h1>
+    <p>在标题、摘要、标签与主题分类中检索。</p>
+  </section>
+
+  <form class="search-page" id="searchForm" role="search">
+    <input name="q" type="search" placeholder="输入关键词，如 LVMH、A2UI、收购…" autocomplete="off" />
+    <button type="submit">搜索</button>
+  </form>
+
+  <noscript>
+    <div class="empty">站内搜索需要 JavaScript。你也可以直接浏览<a href="/archive/">归档</a>或<a href="/tags/">标签</a>页。</div>
+  </noscript>
+
+  <p class="search-status" id="searchStatus" aria-live="polite"></p>
+  <div class="grid" id="searchResults"></div>
+</BaseLayout>
+
+<script>
+  type Item = {
+    slug: string;
+    title: string;
+    summary: string;
+    category: string;
+    categoryLabel: string;
+    tags: string[];
+    date: string;
+  };
+
+  const form = document.getElementById('searchForm') as HTMLFormElement;
+  const input = form.querySelector('input[name=q]') as HTMLInputElement;
+  const status = document.getElementById('searchStatus')!;
+  const results = document.getElementById('searchResults')!;
+  let index: Item[] | null = null;
+
+  const esc = (s: string) =>
+    s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string);
+
+  const mark = (s: string, q: string) => {
+    const text = esc(s);
+    if (!q) return text;
+    const safe = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return text.replace(new RegExp(`(${safe})`, 'gi'), '<mark>$1</mark>');
+  };
+
+  async function load(): Promise<Item[]> {
+    if (index) return index;
+    status.textContent = '加载中…';
+    const res = await fetch('/search.json');
+    index = (await res.json()) as Item[];
+    return index;
+  }
+
+  function render(list: Item[], q: string) {
+    status.textContent = q
+      ? `找到 ${list.length} 篇与「${q}」相关的文章`
+      : `共 ${list.length} 篇文章`;
+    results.innerHTML = list
+      .map(
+        (p) => `<a class="card ${esc(p.category)}" href="/posts/${encodeURIComponent(p.slug)}/">
+          <div class="card-body">
+            <div class="card-meta">${esc(p.categoryLabel)} · ${p.date}</div>
+            <h3>${mark(p.title, q)}</h3>
+            <p>${mark(p.summary, q)}</p>
+            <div class="tags">${p.tags.map((t) => `<span class="tag">#${mark(t, q)}</span>`).join('')}</div>
+            <div class="card-read">阅读 →</div>
+          </div>
+        </a>`
+      )
+      .join('');
+    if (!list.length) {
+      results.innerHTML = '';
+      status.textContent = `没有找到与「${q}」相关的文章，换个词试试。`;
+    }
+  }
+
+  function search() {
+    const q = input.value.trim();
+    const params = new URLSearchParams(location.search);
+    if (q !== params.get('q')) {
+      params.set('q', q);
+      history.replaceState(null, '', q ? `/search/?${params}` : '/search/');
+    }
+    load().then((all) => {
+      if (!q) return render(all, '');
+      const needle = q.toLowerCase();
+      render(
+        all.filter((p) =>
+          (p.title + p.summary + p.tags.join(' ') + p.categoryLabel).toLowerCase().includes(needle)
+        ),
+        q
+      );
+    });
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    search();
+  });
+  input.addEventListener('input', search);
+
+  const initial = new URLSearchParams(location.search).get('q');
+  if (initial) input.value = initial;
+  search();
+</script>

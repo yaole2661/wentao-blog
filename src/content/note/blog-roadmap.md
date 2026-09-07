@@ -18,14 +18,14 @@ cover: /covers/roadmap.svg
 | 框架 | Astro 5（`output: 'static'`），插件只有 `@astrojs/sitemap` 与 `@astrojs/rss` |
 | 运行时 JS | 4 处：主题切换、站内搜索过滤、目录滚动高亮、giscus iframe。**没有任何前端框架，零 Island** |
 | 内容量 | 7 篇文章 → 43 个静态页，构建约 2 秒，零 warning |
-| 域名 | `fanwentao.cn` 主站（十年）+ `fanwentao.com` 预备役（两年），均已注册 |
+| 域名 | `fanwentao.cn` 主站（十年）+ `fanwentao.com` 预备役（两年），均已注册。NS 已从 DNSPod 切到 Vercel（`ns1/ns2.vercel-dns.com`），等全球 DNS 刷新后 Vercel 自动签发 SSL 证书 |
 | 分页 | `PER_PAGE = 5`，首页 / 分类页 / 标签页三处都已分页，页码窗口化 |
-| 评论 | giscus 脚手架已完成，`COMMENTS.enabled = false` 等待填仓库参数 |
-| 部署 | 尚未接线上环境，本地 `astro preview` 验证 |
+| 评论 | giscus 已启用，`COMMENTS.enabled = true`，仓库 `yaole2661/wentao-blog`，分区 `General` |
+| 部署 | Vercel 项目 `wentao-blog` 已创建，首次部署 Ready（`wentao-blog.vercel.app`）。自定义域名 `fanwentao.cn` 已挂到项目，等 DNS 刷新后证书签发。GitHub 自动部署联动待配 |
 
 ## 一、P0：上线前必须做的三件事
 
-### 1. 域名已定：主站 `fanwentao.cn`，两处 URL 待同改
+### 1. 域名已定：主站 `fanwentao.cn`，两处 URL 待同改 ✅
 
 主站域名已确定为 **`fanwentao.cn`**（十年），`fanwentao.com`（两年）作为预备役先空置、上线后 301 到主站。`astro.config.mjs` 的 `site` 和 `src/site.ts` 的 `SITE.url` **必须同时改成 `https://fanwentao.cn`**。它们不是冗余：
 
@@ -36,7 +36,7 @@ cover: /covers/roadmap.svg
 
 同批还有两件小事：① `SITE.author` / `description` / 关于页的「姚乐」统一改成 `Wentao`（只留名，让站点品牌与 URL 一致）；② 两个域名的安全开关保持一致：都开「禁止转移锁 + 自动续费」，都不开「禁止更新锁」（后者会锁掉 NS 修改，纯添乱）。
 
-### 2. 仓库 + 部署 + 评论，是同一条链
+### 2. 仓库 + 部署 + 评论，是同一条链 ✅（GitHub 自动部署联动待配）
 
 顺序上有依赖关系，一次做完：
 
@@ -47,7 +47,7 @@ cover: /covers/roadmap.svg
 
 第 4 步有个兜底：`src/components/Comments.astro` 在构建期会检查「开关开了但 ID 没填齐」并**直接让构建失败**，不会留下一个 iframe 里静默报错的评论区。这条已实测。
 
-### 3. 收录：现在还缺 `robots.txt`
+### 3. 收录：robots.txt ✅
 
 `sitemap-0.xml` 会自动生成，但 `public/` 下目前只有 `og.svg` 和 `favicon.svg`，**没有 `robots.txt`**。上线当天补一个最小版本（`Allow: /` + `Sitemap: https://fanwentao.cn/sitemap-index.xml`），并去 Google Search Console / Bing Webmaster 提交 sitemap。
 
@@ -104,9 +104,12 @@ cover: /covers/roadmap.svg
 ## 六、一页速查
 
 ```
-上线前   两处 URL 同改为 https://fanwentao.cn + 署名统一 Wentao + robots.txt
-         .cn 实名审核通过（1–3 日）→ git push → Vercel → DNSPod 加 A/CNAME → 绑定裸域
-         Discussions + giscus 应用 → site.ts 的 COMMENTS.enabled = true
+上线前   ✅ 两处 URL 同改为 https://fanwentao.cn + 署名统一 Wentao + robots.txt
+         ✅ git push → Vercel 项目创建 → Discussions + giscus → COMMENTS.enabled = true
+         ✅ NS 从 DNSPod 切到 Vercel（ns1/ns2.vercel-dns.com）
+         ⏳ 等 DNS 刷新 → Vercel 签发证书 → https://fanwentao.cn 可访问
+         ⏳ Vercel 连接 GitHub（Login Connections → Connect to GitHub）→ push 自动部署
+         ⏳ Google Search Console / Bing Webmaster 提交 sitemap
          fanwentao.com 上线后 301 → .cn（预备役，先空置）
 第一周   统计脚本 · iOS/微信真机 · 404 自测 · RSS 校验器
 每篇文   <category>/<slug>.md + /covers/<slug>.svg → build 零 warning → preview 四页自查 → push
@@ -114,4 +117,4 @@ cover: /covers/roadmap.svg
 永不     自建评论 · CMS · i18n · 框架 Island
 ```
 
-这份清单本身也还有盲区：线上环境跑起来之前，Vercel 的构建缓存、DNS 生效期、以及国内访问速度这三件事都还是纸面推断。等真的部署完，我会把它们从「待验证」挪到「事实」或者删掉。
+这份清单的盲区正在缩小：Vercel 构建已验证通过（13 秒、零 error），DNS 切换也已执行。剩下的两个待验证项是「DNS 全球刷新需要多久」和「国内访问速度如何」——前者等 NS 生效后自动解决，后者要等域名能打开后实测。

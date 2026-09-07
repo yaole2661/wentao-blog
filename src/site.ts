@@ -41,9 +41,9 @@ export function formatDate(date: Date): string {
  * 未填真实仓库参数时整块不渲染，避免向第三方域发起必然失败的请求。
  */
 export const COMMENTS = {
-  enabled: false,
-  repo: '', // GISCUS_REPO，例如 'your-name/wentao-blog'
-  repoId: '', // GISCUS_REPO_ID
-  category: 'Announce', // GISCUS_CATEGORY（仓库 Discussions 里的分区名）
-  categoryId: '', // GISCUS_CATEGORY_ID
+  enabled: true,
+  repo: 'yaole2661/wentao-blog', // GISCUS_REPO
+  repoId: 'R_kgDOUQ6_RA', // GISCUS_REPO_ID：仓库的 GraphQL node_id
+  category: 'General', // GISCUS_CATEGORY：仓库 Discussions 的分区名
+  categoryId: 'DIC_kwDOUQ6_RM4DFDdP', // GISCUS_CATEGORY_ID：该分区的 node_id
 } as const;

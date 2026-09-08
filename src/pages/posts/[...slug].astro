@@ -140,9 +140,50 @@ const jsonLd = {
       </div>
     </article>
   </div>
+
+  {(tocItems.length > 0 || prevPost || nextPost) && (
+    <div class="mobile-dock">
+      {prevPost && (
+        <a class="dock-btn" href={postUrl(prevPost.id)} aria-label="上一篇" title={prevPost.data.title}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        </a>
+      )}
+      {tocItems.length > 0 && (
+        <button class="dock-btn dock-toc" type="button" aria-label="切换目录">目录</button>
+      )}
+      {nextPost && (
+        <a class="dock-btn" href={postUrl(nextPost.id)} aria-label="下一篇" title={nextPost.data.title}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+      )}
+    </div>
+  )}
 </BaseLayout>
 
 <script>
+  // 手机端：右下角 dock 的「目录」按钮控制侧边目录面板的开合
+  const tocPanel = document.querySelector<HTMLElement>('.toc-side');
+  const tocBtn = document.querySelector<HTMLButtonElement>('.dock-toc');
+  if (tocPanel && tocBtn) {
+    const closeToc = () => {
+      tocPanel.classList.remove('open');
+      tocBtn.classList.remove('active');
+    };
+    tocBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const open = tocPanel.classList.toggle('open');
+      tocBtn.classList.toggle('active', open);
+    });
+    // 点击目录里的链接跳转后自动收起
+    tocPanel.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) closeToc();
+    });
+    // 点击面板外部收起
+    document.addEventListener('click', (e) => {
+      if (!tocPanel.contains(e.target as Node)) closeToc();
+    });
+  }
+
   // 目录滚动高亮：只有 h2 参与（与 tocItems 的 depth<=2 一致）
   const links = [...document.querySelectorAll<HTMLElement>('.toc-side a')];
   if (links.length) {

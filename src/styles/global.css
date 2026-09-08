@@ -159,12 +159,30 @@ body{
 .site-footer{border-top:1px solid var(--line);margin-top:48px;padding:30px 0;color:var(--ink3);font-size:13px;}
 .site-footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
 
+/* 手机端悬浮 dock（默认隐藏，仅窄屏显示） */
+.mobile-dock{display:none;}
+
 @media(max-width:860px){
-  .layout{grid-template-columns:1fr;}
-  .toc-side{position:static;order:-1;margin-bottom:20px;}
-  .toc-side ol{border-left:none;display:flex;flex-wrap:wrap;gap:8px;}
-  .toc-side a{border:1px solid var(--line2);border-radius:8px;margin-left:0;}
-  .toc-side a.active{border-color:var(--brand);}
+  .layout{grid-template-columns:1fr;padding-bottom:84px;}
+  /* 目录改为右下角悬浮面板，由 dock 的「目录」按钮开合 */
+  .toc-side{position:fixed;top:auto;left:auto;right:14px;order:unset;margin:0;
+    bottom:calc(66px + env(safe-area-inset-bottom));width:min(280px,calc(100vw - 28px));
+    max-height:50vh;overflow-y:auto;display:none;background:var(--bg-card);
+    border:1px solid var(--line2);border-radius:14px;padding:14px 16px;
+    box-shadow:var(--shadow);z-index:55;}
+  .toc-side.open{display:block;}
+  .mobile-dock{display:flex;position:fixed;right:14px;
+    bottom:calc(14px + env(safe-area-inset-bottom));align-items:center;gap:2px;padding:5px;
+    background:var(--bg-card);border:1px solid var(--line2);border-radius:999px;
+    box-shadow:var(--shadow);z-index:56;}
+  .dock-btn{min-width:38px;height:38px;padding:0 10px;border:0;border-radius:999px;
+    background:transparent;color:var(--ink2);display:flex;align-items:center;
+    justify-content:center;cursor:pointer;font-size:13px;font-weight:600;}
+  .dock-btn:active{background:var(--brand-bg);color:var(--brand);}
+  .dock-btn svg{width:18px;height:18px;}
+  .dock-toc.active{background:var(--brand);color:#fff;}
+  /* 大图卡式前后导航在手机上由 dock 取代 */
+  .post-nav{display:none;}
 }
 @media(max-width:720px){
   .hero h1{font-size:30px;}
@@ -203,11 +221,6 @@ mark{background:var(--brand-bg);color:var(--brand);padding:0 2px;border-radius:3
 .post-nav-title{font-size:14px;font-weight:600;line-height:1.4;color:var(--ink);}
 .post-nav-item:hover .post-nav-title{color:var(--brand);}
 .post-nav-placeholder{visibility:hidden;}
-@media(max-width:480px){
-  .post-nav{grid-template-columns:1fr;}
-  .post-nav-item.next{text-align:left;}
-  .post-nav-item.next .post-nav-label{justify-content:flex-start;}
-}
 
 /* ===== 列表页页头（分类 / 标签 / 归档 / 搜索 / 404） ===== */
 .page-head{padding:48px 0 6px;}

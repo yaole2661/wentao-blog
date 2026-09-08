@@ -151,8 +151,12 @@ body{
 .prose th{background:var(--bg-soft);font-weight:600;}
 .prose ul,.prose ol{padding-left:24px;}
 .prose li{margin:6px 0;}
-.prose a{color:var(--brand);border-bottom:1px solid var(--brand-bg);}
+.prose a{color:var(--brand);border-bottom:1px solid var(--brand-bg);overflow-wrap:anywhere;word-break:break-word;}
 .prose a:hover{border-bottom-color:var(--brand);}
+/* 长 URL / 连续英文不再撑破容器 */
+.prose{overflow-wrap:anywhere;word-break:normal;}
+.prose code{overflow-wrap:anywhere;word-break:break-all;}
+.prose pre code{word-break:normal;}
 .prose hr{border:none;border-top:1px solid var(--line);margin:32px 0;}
 
 /* ===== Footer ===== */
@@ -164,14 +168,14 @@ body{
 
 @media(max-width:860px){
   .layout{grid-template-columns:1fr;padding-bottom:84px;}
-  /* 目录改为右下角悬浮面板，由 dock 的「目录」按钮开合 */
-  .toc-side{position:fixed;top:auto;left:auto;right:14px;order:unset;margin:0;
+  /* 目录改为左下角悬浮面板，由 dock 的「目录」按钮开合 */
+  .toc-side{position:fixed;top:auto;right:auto;left:14px;order:unset;margin:0;
     bottom:calc(66px + env(safe-area-inset-bottom));width:min(280px,calc(100vw - 28px));
     max-height:50vh;overflow-y:auto;display:none;background:var(--bg-card);
     border:1px solid var(--line2);border-radius:14px;padding:14px 16px;
     box-shadow:var(--shadow);z-index:55;}
   .toc-side.open{display:block;}
-  .mobile-dock{display:flex;position:fixed;right:14px;
+  .mobile-dock{display:flex;position:fixed;right:auto;left:14px;
     bottom:calc(14px + env(safe-area-inset-bottom));align-items:center;gap:2px;padding:5px;
     background:var(--bg-card);border:1px solid var(--line2);border-radius:999px;
     box-shadow:var(--shadow);z-index:56;}

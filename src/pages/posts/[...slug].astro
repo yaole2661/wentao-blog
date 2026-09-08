@@ -33,6 +33,11 @@ const related = allPosts
   .map((x) => x.p);
 
 const url = postUrl(post.id);
+
+// 上一篇/下一篇：按发布时间倒序，当前文章的前后
+const currentIdx = allPosts.findIndex((p) => p.id === post.id);
+const prevPost = currentIdx < allPosts.length - 1 ? allPosts[currentIdx + 1] : null;  // 更早的一篇
+const nextPost = currentIdx > 0 ? allPosts[currentIdx - 1] : null;  // 更新的一篇
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
@@ -113,6 +118,24 @@ const jsonLd = {
             </div>
           </section>
         )}
+        <nav class="post-nav">
+          {prevPost ? (
+            <a class="post-nav-item prev" href={postUrl(prevPost.id)}>
+              <span class="post-nav-label">← 上一篇</span>
+              <span class="post-nav-title">{prevPost.data.title}</span>
+            </a>
+          ) : (
+            <div class="post-nav-item prev post-nav-placeholder"></div>
+          )}
+          {nextPost ? (
+            <a class="post-nav-item next" href={postUrl(nextPost.id)}>
+              <span class="post-nav-label">下一篇 →</span>
+              <span class="post-nav-title">{nextPost.data.title}</span>
+            </a>
+          ) : (
+            <div class="post-nav-item next post-nav-placeholder"></div>
+          )}
+        </nav>
         <Comments />
       </div>
     </article>

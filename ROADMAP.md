@@ -15,18 +15,23 @@
 - ✅ NS 从 DNSPod 切到 Vercel → DNS 刷新完成 → SSL 证书签发 → 正式上线
 - ✅ Vercel 已连接 GitHub，push 自动部署已验证
 
-## P1 上线后第一周
+## P1 网站建设 ✅ 已收官（2026-09-08）
 
 - ✅ 404 与死链自测（11 个页面全部通过）
 - ✅ RSS 订阅校验（RSS 2.0 规范合规）
-- ✅ 手机适配修复（横向溢出 + 前后导航 + 汉堡菜单交互）
-- ✅ Gates Notes 学习文档（gatesnotes-study.md 已发布）
-- ⏳ 真机测试（修复后复测）
-- ⏳ 提交 sitemap 到 Google Search Console / Bing Webmaster
+- ✅ 手机适配修复（横向溢出 + 长 URL 换行 + 左侧悬浮目录/前后导航 dock + 汉堡菜单交互）
+- ✅ Gates Notes 学习文档（保持草稿，等发布指令）
+- ✅ pandoc 装好，Word→MD/视频嵌入链路可用（说明见草稿 content-workflow.md）
+- ⏳ 提交 sitemap 到 Google Search Console / Bing Webmaster（低优先级，随时可做）
 
-## P2 体验提升（来自 Gates Notes 学习）
+## P2 当前阶段：自己写文章 + 渐进打磨样式
 
-> 来源：[Gates Notes 学习笔记](src/content/note/gatesnotes-study.md) 第七节
+> 网站建设告一段落。今后节奏：**以真实内容创作驱动，样式优化按需小步迭代**，不再集中改版。
+
+- 主线：站主自己写正式文章（AI 只协助格式转换、润色、配图，新文章一律默认草稿）
+- 线上现有文章均为建站期 AI 生成的占位内容，处置方式由站主决定（保留占位 / 转草稿 / 删除）
+
+### 样式备选池（写文章过程中遇到再做）
 
 | 序号 | 改进 | 难度 | 状态 |
 | --- | --- | --- | --- |

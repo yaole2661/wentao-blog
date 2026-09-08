@@ -158,6 +158,8 @@ body{
 .prose code{overflow-wrap:anywhere;word-break:break-all;}
 .prose pre code{word-break:normal;}
 .prose hr{border:none;border-top:1px solid var(--line);margin:32px 0;}
+/* 嵌入视频（B 站/YouTube iframe）：16:9 自适应宽度，手机端不溢出 */
+.prose iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:10px;margin:16px 0;}
 
 /* ===== Footer ===== */
 .site-footer{border-top:1px solid var(--line);margin-top:48px;padding:30px 0;color:var(--ink3);font-size:13px;}

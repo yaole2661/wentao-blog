@@ -53,6 +53,11 @@ const posts = defineCollection({
     /** summary 是否由 AI 生成：文章页会渲染醒目标注（对标「此摘要由 AI 生成，仅供参考」） */
     aiSummary: z.boolean().default(false),
     cover: z.string().optional(), // 站内相对路径，如 /covers/lvmh.svg
+    /**
+     * 草稿开关：true 时文章不进入任何线上页面（列表/分类/标签/归档/搜索/RSS/sitemap/详情页）。
+     * 约定：新生成的文档默认 draft: true，只有用户明确提出发布时才改为 false。
+     */
+    draft: z.boolean().default(false),
   }),
 });
 

@@ -2,6 +2,7 @@
 title: Gates Notes 学习笔记
 date: 2026-09-08
 category: note
+draft: true
 tags: [建站, 信息源, 方法论]
 summary: 分析 gatesnotes.com 的设计与架构，对比 Wentao's blog 的现状，列出 5 个可借鉴的改进点。
 ---

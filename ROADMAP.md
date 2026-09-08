@@ -2,6 +2,12 @@
 
 > 不发布到站点，仅本地跟踪。原 `src/content/note/blog-roadmap.md` 已下线。
 
+## 发布规则（重要）
+
+- **新生成的 `src/content/` 下的 MD 默认 `draft: true`**，不会出现在任何线上页面。
+- 只有用户明确提出"发布"时，才把 `draft` 改为 `false`（或删除该字段）。
+- Gates Notes 学习笔记当前为草稿状态，等待发布指令。
+
 ## P0 上线前 ✅ 全部完成
 
 - ✅ URL 同改 `https://fanwentao.cn` + 署名统一 Wentao + robots.txt

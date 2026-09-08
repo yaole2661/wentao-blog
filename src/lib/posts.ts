@@ -5,9 +5,9 @@ export type Post = CollectionEntry<'posts'>;
 /** 列表页每页条数（与原型保持一致） */
 export const PER_PAGE = 5;
 
-/** 全站文章，按发布日期倒序 */
+/** 全站文章，按发布日期倒序；draft: true 的草稿不进入任何线上页面 */
 export async function getPosts(): Promise<Post[]> {
-  const posts = await getCollection('posts');
+  const posts = await getCollection('posts', (p) => !p.data.draft);
   return posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 }
 

@@ -98,8 +98,6 @@ cover: /covers/a2ui.svg   # 可选，站内相对路径
 - `enabled: true` 但 `repo` / `repoId` / `categoryId` 没填齐时，**构建期直接抛错**，不会留下一个在 iframe 里静默失败的评论区。
 - 主题切换时会向 giscus iframe `postMessage` 换 `theme`（`light` / `transparent_dark`），否则深色模式下评论区仍是白底。
 
-站内另有一篇按优先级整理的待办：`src/content/note/blog-roadmap.md`（上线前 / 第一周 / 发布流程 / 季度回看 / 明确不做）。
-
 ## 八、已知边界
 
 - 站内搜索是构建期 `search.json` + 前端过滤，文章数上千后应换成 Pagefind。

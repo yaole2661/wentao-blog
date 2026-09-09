@@ -103,7 +103,7 @@ const displayTitle = title === SITE.name ? title : `${title} · ${SITE.name}`;
         <span>© 2026 {SITE.author} · {SITE.name}</span>
         <span class="footer-links">
           {SOCIALS.map((s) => (
-            <a href={s.url} key={s.url}>{s.name}</a>
+            <a href={s.url}>{s.name}</a>
           ))}
           <a href="/rss.xml">RSS</a>
           <a href="/sitemap-index.xml">Sitemap</a>

@@ -28,6 +28,7 @@ tags: [标签1, 标签2]
 summary: 一句话摘要，用于列表页和 SEO 描述。
 aiSummary: false      # summary 是否 AI 生成，true 时文章页会标注
 cover: /covers/xxx.svg  # 可选封面图，放 public/covers/ 下
+featured: false       # true 时进入首页右侧「精选」榜单
 draft: true           # 发布前保持 true
 ---
 ```

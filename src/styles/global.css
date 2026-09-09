@@ -72,7 +72,6 @@ body{
   .pager{max-width:100%;margin:16px 0 40px;padding:12px;}
   .pager button,.pager a,.pager-current,.pager-disabled{min-width:36px;height:36px;padding:0 10px;font-size:13px;}
   .grid{grid-template-columns:1fr;}
-  .topics{grid-template-columns:1fr;}
   .related-grid{grid-template-columns:1fr;}
   .wrap{padding:0 16px;}
 }
@@ -104,23 +103,24 @@ body{
 .card{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg-card);
   transition:.18s;display:flex;flex-direction:column;}
 .card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--brand2);}
-.card .cover{height:150px;display:flex;align-items:flex-end;padding:14px;color:#fff;font-weight:600;font-size:15px;
+.card .cover{height:120px;display:flex;align-items:flex-end;padding:14px;color:#fff;font-weight:600;font-size:15px;
   background:linear-gradient(135deg,var(--brand),var(--brand2));}
 .card.ai .cover{background:linear-gradient(135deg,#0b6e4f,#1f9d7a);}
-.card img.cover{display:block;width:100%;height:150px;object-fit:cover;padding:0;background:var(--bg-soft);}
-.card-body{padding:16px 18px 18px;display:flex;flex-direction:column;flex:1;}
-.card-meta{font-size:12px;color:var(--ink3);margin-bottom:8px;}
-.card h3{font-size:17px;line-height:1.4;margin:0 0 8px;color:var(--ink);}
+.card img.cover{display:block;width:100%;height:120px;object-fit:cover;padding:0;background:var(--bg-soft);}
+.card-body{padding:12px 15px 14px;display:flex;flex-direction:column;flex:1;}
+.card-meta{font-size:12px;color:var(--ink3);margin-bottom:5px;}
+.card h3{font-size:17px;line-height:1.35;margin:0 0 6px;color:var(--ink);}
 .card:hover h3{color:var(--brand);}
-.card p{font-size:14px;color:var(--ink2);margin:0 0 14px;flex:1;}
+.card p{font-size:14px;color:var(--ink2);margin:0 0 10px;flex:1;}
 .card .tags{display:flex;flex-wrap:wrap;gap:6px;}
 .tag{font-size:12px;color:var(--brand2);background:var(--brand-bg);padding:2px 9px;border-radius:6px;}
-.card-read{margin-top:12px;font-size:13px;font-weight:600;color:var(--brand);}
+.card-read{margin-top:9px;font-size:13px;font-weight:600;color:var(--brand);}
 
 /* ===== Pagination ===== */
+/* 分页：盒子收紧到内容宽度后由 auto 边距居中，避免定宽盒子看起来偏左 */
 .pager{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;
-  margin:24px auto 56px;padding:14px 18px;border:1px solid var(--line);border-radius:14px;
-  background:var(--bg-soft);max-width:520px;}
+  margin:24px auto 40px;padding:14px 18px;border:1px solid var(--line);border-radius:14px;
+  background:var(--bg-soft);width:fit-content;max-width:520px;}
 .pager button{min-width:40px;height:40px;padding:0 14px;border:1px solid var(--line2);background:#fff;border-radius:10px;
   color:var(--ink2);cursor:pointer;font-size:14px;font-weight:600;transition:.15s;}
 .pager button:hover:not(:disabled){border-color:var(--brand2);color:var(--brand);background:var(--brand-bg);}
@@ -286,33 +286,71 @@ mark{background:var(--brand-bg);color:var(--brand);padding:0 2px;border-radius:3
 .pager-ellipsis{min-width:24px;display:inline-flex;align-items:center;justify-content:center;
   color:var(--ink3);font-size:14px;letter-spacing:1px;}
 
-/* ===== 首页双主题分区 ===== */
-.topics{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin:34px 0 6px;}
-.topic-panel{border:1px solid var(--line);border-radius:14px;padding:18px 20px;background:var(--bg-card);}
-.topic-panel header{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
-  padding-bottom:10px;margin-bottom:6px;border-bottom:1px solid var(--line);}
-.topic-panel h2{font-size:17px;margin:0;color:var(--ink);font-weight:700;}
-.topic-panel.research{border-top:3px solid var(--brand);}
-.topic-panel.ai{border-top:3px solid #1f9d7a;}
-.topic-panel.note{border-top:3px solid var(--accent);}
-.topic-more{font-size:12px;color:var(--brand2);white-space:nowrap;}
-.topic-more:hover{color:var(--brand);}
+/* ===== 首页两栏：主列卡片流 + 右侧栏（关注区 + 精选榜） ===== */
+.home-layout{display:grid;grid-template-columns:1fr 300px;gap:32px;align-items:start;margin:0;}
+.home-main{min-width:0;}
+/* 工具栏已移到两栏之上：侧栏补一段与卡片流相同的上边距，让侧栏顶端与第一排卡片齐平 */
+.home-side{align-self:start;margin-top:28px;background:var(--bg-soft);border-radius:14px;padding:18px;
+  display:flex;flex-direction:column;gap:22px;}
+/* 底色变深后虚线分隔要提一档对比度，否则会几乎看不见 */
+.home-side .pick-list li{border-bottom-color:var(--line2);}
+/* 整块只有一层底色，面板本身不再各自套卡片：小标题 + 简单列表 */
+.side-panel header{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
+.side-panel h2{font-size:15px;margin:0;color:var(--ink);font-weight:700;letter-spacing:.3px;}
+.side-more{font-size:12px;color:var(--brand2);white-space:nowrap;}
+.side-more:hover{color:var(--brand);}
+/* 精选榜：序号徽标 + 两行标题 + 分类·月份 */
+.pick-list{list-style:none;counter-reset:pick;margin:0;padding:0;}
+.pick-list li{counter-increment:pick;padding:9px 0;border-bottom:1px dashed var(--line);}
+.pick-list li:last-child{border-bottom:none;}
+.pick-list a{display:flex;align-items:flex-start;gap:10px;}
+.pick-list a::before{content:counter(pick);flex:0 0 18px;height:18px;margin-top:4px;border-radius:5px;
+  background:var(--brand-bg);color:var(--brand2);font-size:11px;font-weight:700;
+  display:inline-flex;align-items:center;justify-content:center;transition:.15s;}
+.pick-list li:nth-child(-n+3) a::before{background:var(--brand);color:#fff;}
+.pick-main{display:flex;flex-direction:column;gap:3px;min-width:0;}
+.pick-title{font-size:14px;line-height:1.5;color:var(--ink2);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.pick-list a:hover .pick-title{color:var(--brand);}
+.pick-meta{font-size:12px;color:var(--ink3);}
+/* 关注区：两列图标胶囊，平台数量为奇数时末行留空 */
+.social-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px;}
+/* --c 为各平台官方主色（来自 site.ts 的 SOCIALS），未提供时退回站点品牌色 */
+.social-item{--c:var(--brand2);display:flex;align-items:center;gap:7px;min-width:0;padding:8px 9px;
+  border-radius:10px;border:1px solid var(--line2);background:var(--bg-card);
+  font-size:13px;color:var(--ink2);transition:.15s;}
+.social-item:hover{border-color:var(--c);color:var(--ink);transform:translateY(-1px);
+  background:color-mix(in srgb,var(--c) 12%,var(--bg-card));}
+.social-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+/* 还没填主页链接的平台：虚线描边、不可点击，提示这是占位而不是坏链 */
+.social-todo{border-style:dashed;background:transparent;color:var(--ink3);cursor:default;}
+.social-todo:hover{border-color:var(--line2);color:var(--ink3);background:transparent;transform:none;}
+/* 通用文字榜单（404 最新文章等页面共用） */
 .topic-list{list-style:none;margin:0;padding:0;}
 .topic-list li{display:flex;align-items:baseline;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);}
 .topic-list li:last-child{border-bottom:none;}
 .topic-list a{flex:1;min-width:0;font-size:14px;color:var(--ink2);line-height:1.5;}
 .topic-list a:hover{color:var(--brand);}
 .topic-date{font-size:12px;color:var(--ink3);font-variant-numeric:tabular-nums;flex:0 0 auto;}
-.topic-empty{font-size:14px;color:var(--ink3);margin:10px 0 4px;}
+@media(max-width:1120px){
+  .home-layout{grid-template-columns:1fr 264px;gap:24px;}
+}
+@media(max-width:900px){
+  /* 窄屏回到单列：侧栏落到主列下方，面板改为并排的自适应网格 */
+  .home-layout{grid-template-columns:1fr;}
+  .home-side{margin-top:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    align-items:start;margin-bottom:20px;}
+}
+
+/* ===== 首页收尾：站点主张（原顶部 hero 介绍段移到正文末尾） ===== */
+.site-intro{margin:-8px 0 44px;padding:20px 0 0;border-top:1px solid var(--line);}
+.site-intro p{font-size:14px;line-height:1.8;color:var(--ink3);margin:0;max-width:720px;}
 
 /* ===== 随笔笔记分类封面 ===== */
 .card.note .cover{background:linear-gradient(135deg,#854F0B,#B07C24);}
 
 /* ===== 标签云 ===== */
 .tag-cloud{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 40px;}
-.home-tags h2{font-size:18px;margin:0 0 4px;color:var(--ink);font-weight:700;display:flex;
-  align-items:baseline;justify-content:space-between;gap:10px;}
-.home-tags h2 a{font-size:13px;font-weight:500;color:var(--brand);}
 .tag-item{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line2);border-radius:999px;
   padding:7px 8px 7px 16px;background:var(--bg-card);font-size:14px;color:var(--ink2);transition:.15s;}
 .tag-item:hover{border-color:var(--brand2);color:var(--brand);background:var(--brand-bg);}

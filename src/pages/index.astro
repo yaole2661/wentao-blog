@@ -2,47 +2,33 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import Pager from '../components/Pager.astro';
-import { getPosts, paginate, postsByCategory, categoryUrl, postUrl, getTagIndex, tagUrl } from '../lib/posts';
-import { CATEGORIES, SITE } from '../site';
+import SocialIcon from '../components/SocialIcon.astro';
+import { getPosts, paginate, categoryUrl, postUrl, type Post } from '../lib/posts';
+import { CATEGORIES, SITE, SOCIALS, categoryLabel } from '../site';
 
 const posts = await getPosts();
 const { items, page, totalPages } = paginate(posts, 1);
-const hotTags = getTagIndex(posts).slice(0, 12);
 
-// 双主题分区：每个主题取最新 3 篇（设计方案 §P0「双主题分区首页」）
-const topics = Object.entries(CATEGORIES).map(([key, label]) => {
-  const list = postsByCategory(posts, key);
-  return { key, label, count: list.length, latest: list.slice(0, 3) };
-});
+/** 右侧栏容量：精选榜按 10 篇排，与上方「关注」区加起来与主列卡片流高度相当 */
+const PICK_COUNT = 10;
+
+/** 右侧「精选」榜单：标了 featured 的排前面，不足 10 篇时用最新文章补齐位置 */
+const picks = [
+  ...posts.filter((p) => p.data.featured),
+  ...posts.filter((p) => !p.data.featured),
+].slice(0, PICK_COUNT);
+
+/** 榜单里的日期只到月份，避免窄栏换行 */
+function ym(date: Date): string {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+}
+
+function pickMeta(post: Post): string {
+  return `${categoryLabel(post.data.category)} · ${ym(post.data.date)}`;
+}
 ---
 <BaseLayout title={SITE.name} description={SITE.description}>
-  <section class="hero">
-    <p>企业研究（创业 · 商业 · 资本）与前沿 AI（现代 AI 沉淀）双线并行。把严肃的研究与前沿认知，讲得明白。</p>
-  </section>
-
-  <div class="topics">
-    {topics.map((topic) => (
-      <section class:list={['topic-panel', topic.key]}>
-        <header>
-          <h2>{topic.label}</h2>
-          <a class="topic-more" href={categoryUrl(topic.key)}>查看全部 {topic.count} 篇 →</a>
-        </header>
-        {topic.latest.length > 0 ? (
-          <ul class="topic-list">
-            {topic.latest.map((post) => (
-              <li>
-                <a href={postUrl(post.id)}>{post.data.title}</a>
-                <span class="topic-date">{post.data.date.getFullYear()}-{String(post.data.date.getMonth() + 1).padStart(2, '0')}</span>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p class="topic-empty">该主题下暂无文章。</p>
-        )}
-      </section>
-    ))}
-  </div>
-
+  {/* 工具栏横跨整页宽度，右侧栏因此能与第一排卡片的顶端对齐 */}
   <div class="toolbar">
     <div class="chips">
       <span class="chip active">全部</span>
@@ -53,27 +39,65 @@ const topics = Object.entries(CATEGORIES).map(([key, label]) => {
     <span class="count">共 {posts.length} 篇</span>
   </div>
 
-  {items.length > 0 ? (
-    <div class="grid">
-      {items.map((post) => <PostCard {post} />)}
+  <div class="home-layout">
+    <div class="home-main">
+      {items.length > 0 ? (
+        <div class="grid">
+          {items.map((post) => <PostCard {post} />)}
+        </div>
+      ) : (
+        <div class="empty">还没有文章，先去 <a href="/about">关于页</a> 看看这个站在做什么。</div>
+      )}
+
+      <Pager base="/" {page} {totalPages} total={posts.length} />
     </div>
-  ) : (
-    <div class="empty">还没有文章，先去 <a href="/about">关于页</a> 看看这个站在做什么。</div>
-  )}
 
-  <Pager base="/" {page} {totalPages} total={posts.length} />
+    <aside class="home-side">
+      <section class="side-panel">
+        <header>
+          <h2>关注</h2>
+          <a class="side-more" href="/about/">关于我 →</a>
+        </header>
+        <div class="social-grid">
+          {SOCIALS.map((s) =>
+            s.url ? (
+              <a class="social-item" href={s.url} style={s.color ? { '--c': s.color } : undefined} target="_blank" rel="noopener noreferrer me">
+                <SocialIcon icon={s.icon} name={s.name} />
+                <span class="social-label">{s.name}</span>
+              </a>
+            ) : (
+              <span class="social-item social-todo" style={s.color ? { '--c': s.color } : undefined} title={`${s.name}：主页链接待补充`}>
+                <SocialIcon icon={s.icon} name={s.name} />
+                <span class="social-label">{s.name}</span>
+              </span>
+            )
+          )}
+        </div>
+      </section>
 
-  {hotTags.length > 0 && (
-    <section class="home-tags">
-      <h2>热门标签 <a href="/tags/">全部标签 →</a></h2>
-      <div class="tag-cloud">
-        {hotTags.map(({ tag, count }) => (
-          <a class="tag-item" href={tagUrl(tag)}>
-            <span class="tag-name">#{tag}</span>
-            <span class="tag-count">{count}</span>
-          </a>
-        ))}
-      </div>
-    </section>
-  )}
+      <section class="side-panel">
+        <header>
+          <h2>精选</h2>
+          <a class="side-more" href="/archive/">全部文章 →</a>
+        </header>
+        <ol class="pick-list">
+          {picks.map((post) => (
+            <li>
+              <a href={postUrl(post.id)}>
+                <span class="pick-main">
+                  <span class="pick-title">{post.data.title}</span>
+                  <span class="pick-meta">{pickMeta(post)}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </section>
+    </aside>
+  </div>
+
+  {/* 站点主张：放在正文末尾作收尾说明，避免首页顶部先压一大段介绍 */}
+  <section class="site-intro">
+    <p>企业研究（创业 · 商业 · 资本）与前沿 AI（现代 AI 沉淀）双线并行。把严肃的研究与前沿认知，讲得明白。</p>
+  </section>
 </BaseLayout>

@@ -6,6 +6,7 @@ tags: [企业研究, LVMH, 收购史, 奢侈品]
 summary: 从三大收购战到品牌矩阵运营，系统拆解 LVMH 如何用资本与品牌协同构建奢侈品帝国。
 aiSummary: true
 cover: /covers/lvmh.svg
+featured: true
 ---
 
 ## 一、帝国概览

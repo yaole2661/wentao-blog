@@ -16,7 +16,9 @@
 
 *{box-sizing:border-box;}
 a{color:inherit;text-decoration:none;}
-html{scroll-behavior:smooth;overflow-x:hidden;}
+/* 横向溢出只用 clip 收口：overflow-x:hidden 会让元素变成滚动容器，
+   从而使子元素的 position:sticky（顶部栏、侧边目录）失效。 */
+html{scroll-behavior:smooth;}
 body{
   margin:0;
   background:
@@ -27,7 +29,8 @@ body{
   color:var(--ink);
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
   font-size:16px; line-height:1.75; -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
+  /* 兜住极端情况下的横向溢出（宽表格、超长链接），同时不影响 sticky */
+  overflow-x:clip;
 }
 
 /* ===== Header ===== */
@@ -121,7 +124,17 @@ body{
 /* ===== Post layout (sidebar TOC) ===== */
 .layout{max-width:1080px;margin:34px auto;padding:0 24px;
   display:grid;grid-template-columns:240px 1fr;gap:44px;align-items:start;}
-.toc-side{position:sticky;top:88px;align-self:start;font-size:14px;}
+/* 宽屏桌面：整体放大容器(页头/正文/页脚同步)，避免案板米色两侧留白过宽 */
+@media(min-width:1280px){
+  .wrap,.site-header .wrap,.layout{max-width:1200px;}
+}
+@media(min-width:1600px){
+  .wrap,.site-header .wrap,.layout{max-width:1340px;}
+}
+/* 常驻：跟随正文滚动停在顶栏下方；目录过长时自身内部滚动，避免尾部条目看不见 */
+.toc-side{position:sticky;top:88px;align-self:start;font-size:14px;
+  max-height:calc(100vh - 104px);overflow-y:auto;overscroll-behavior:contain;
+  scrollbar-width:thin;}
 .toc-title{font-size:12px;letter-spacing:1px;color:var(--ink3);text-transform:uppercase;margin-bottom:12px;font-weight:600;}
 .toc-side ol{list-style:none;margin:0;padding:0;border-left:2px solid var(--line);}
 .toc-side li{margin:0;}

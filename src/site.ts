@@ -37,14 +37,13 @@ export const SOCIALS: Social[] = [
   { name: '哔哩哔哩', icon: 'bilibili', url: 'https://space.bilibili.com/595555597', color: '#00a1d6' },
   { name: '今日头条', icon: 'toutiao', url: 'https://www.toutiao.com/c/user/token/CixO7qELHsFbkZ9LBmiKEsoyUUDTD9PD110EzTgwT1bPDWGOiB8NAcCoXAAWVhpJCjwAAAAAAAAAAAAAUOGI6xF2uiDcu6fNb8fKIhuVJTTU2XitgtnAG9BulhlsZJ1RBc03MLi15rQo6DpB_WwQh-WbDhjDxYPqBCIBAzWOZKI=/?source=feed', color: '#ff373c' },
   { name: '小红书', icon: 'xiaohongshu', url: 'https://www.xiaohongshu.com/user/profile/67a20ae9000000000d008859', color: '#ff2442' },
-  { name: '公众号', icon: 'wechat', url: '', color: '#07c160' },
   { name: '知乎', icon: 'zhihu', url: 'https://www.zhihu.com/people/ruo-teng-65', color: '#0084ff' },
   { name: '微博', icon: 'weibo', url: 'https://weibo.com/u/7421230864', color: '#e6162d' },
-  { name: '豆包', icon: 'doubao', url: '', color: '#1e37fc' },
   { name: '豆瓣', icon: 'douban', url: 'https://www.douban.com/people/257047452/', color: '#2d963d' },
   { name: '即刻', icon: 'mono', url: 'https://web.okjike.com/u/2ed6122a-985c-4e9b-965e-1287752906df' },
   { name: '小宇宙', icon: 'mono', url: 'https://www.xiaoyuzhoufm.com/' },
   { name: '知识星球', icon: 'mono', url: 'https://wx.zsxq.com/login' },
+  { name: '公众号', icon: 'wechat', url: '', color: '#07c160' },
 ];
 
 export type CategoryKey = keyof typeof CATEGORIES;

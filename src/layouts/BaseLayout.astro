@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { SITE, CATEGORIES } from '../site';
+import { SITE, CATEGORIES, SOCIALS } from '../site';
 import { categoryUrl } from '../lib/posts';
 
 interface Props {
@@ -102,6 +102,9 @@ const displayTitle = title === SITE.name ? title : `${title} · ${SITE.name}`;
       <div class="wrap">
         <span>© 2026 {SITE.author} · {SITE.name}</span>
         <span class="footer-links">
+          {SOCIALS.map((s) => (
+            <a href={s.url} key={s.url}>{s.name}</a>
+          ))}
           <a href="/rss.xml">RSS</a>
           <a href="/sitemap-index.xml">Sitemap</a>
           <a href="/archive/">归档</a>

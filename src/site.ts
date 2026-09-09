@@ -20,6 +20,11 @@ export const CATEGORIES = {
   note: '随笔笔记',
 } as const;
 
+/** 社交媒体主页链接：页脚统一渲染，按需追加国内外平台 */
+export const SOCIALS = [
+  { name: '知乎', url: 'https://www.zhihu.com/people/ruo-teng-65' },
+] as const;
+
 export type CategoryKey = keyof typeof CATEGORIES;
 
 export function categoryLabel(key: string): string {

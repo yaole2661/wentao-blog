@@ -1,6 +1,6 @@
 :root{
-  --bg:#ffffff;
-  --bg-soft:#f7f6f3;
+  --bg:#f5f4ee;            /* 案板底色：暖米白 */
+  --bg-soft:#ece9e2;       /* 次级底色：比案板略深，用于输入框/表头/摘要条 */
   --bg-card:#ffffff;
   --ink:#1a1a1a;
   --ink2:#454545;
@@ -19,7 +19,11 @@ a{color:inherit;text-decoration:none;}
 html{scroll-behavior:smooth;overflow-x:hidden;}
 body{
   margin:0;
-  background:var(--bg);
+  background:
+    radial-gradient(1100px 560px at 82% -8%, rgba(83,74,183,.055), transparent 62%),
+    radial-gradient(900px 520px at -8% 24%, rgba(133,79,11,.045), transparent 58%),
+    var(--bg);
+  background-attachment:fixed;
   color:var(--ink);
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
   font-size:16px; line-height:1.75; -webkit-font-smoothing:antialiased;
@@ -126,7 +130,8 @@ body{
 .toc-side a.active{color:var(--brand);border-left-color:var(--brand);font-weight:600;}
 
 /* ===== Post ===== */
-.post-main{min-width:0;}
+.post-main{min-width:0;background:var(--bg-card);border:1px solid var(--line);
+  border-radius:16px;padding:32px 36px;box-shadow:var(--shadow);}
 .btn-back{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border:1px solid var(--brand2);
   border-radius:999px;color:var(--brand);font-size:14px;font-weight:600;margin-bottom:24px;transition:.15s;}
 .btn-back:hover{background:var(--brand);color:#fff;}
@@ -170,6 +175,7 @@ body{
 
 @media(max-width:860px){
   .layout{grid-template-columns:1fr;padding-bottom:84px;}
+  .post-main{padding:26px 16px 28px;border-radius:12px;}
   /* 目录改为左下角悬浮面板，由 dock 的「目录」按钮开合 */
   .toc-side{position:fixed;top:auto;right:auto;left:14px;order:unset;margin:0;
     bottom:calc(66px + env(safe-area-inset-bottom));width:min(280px,calc(100vw - 28px));
@@ -202,6 +208,10 @@ body{
   --line:#272733;--line2:#343446;--accent:#e0a35a;
   --shadow:0 1px 3px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.45);
 }
+[data-theme="dark"] body{background:
+  radial-gradient(1100px 560px at 82% -8%, rgba(139,124,255,.07), transparent 62%),
+  radial-gradient(900px 520px at -8% 24%, rgba(224,163,90,.05), transparent 58%),
+  var(--bg);}
 [data-theme="dark"] .site-header{background:rgba(14,14,22,.82);}
 [data-theme="dark"] .search input:focus{background:var(--bg-card);}
 .theme-toggle{border:1px solid var(--line2);background:var(--bg-soft);color:var(--ink);

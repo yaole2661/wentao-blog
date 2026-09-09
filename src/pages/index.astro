@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import Pager from '../components/Pager.astro';
 import SocialIcon from '../components/SocialIcon.astro';
-import { getPosts, paginate, categoryUrl, postUrl, type Post } from '../lib/posts';
+import { getPosts, paginate, categoryUrl, postUrl, getTagIndex, tagUrl, type Post } from '../lib/posts';
 import { CATEGORIES, SITE, SOCIALS, categoryLabel } from '../site';
 
 const posts = await getPosts();
@@ -26,6 +26,10 @@ function ym(date: Date): string {
 function pickMeta(post: Post): string {
   return `${categoryLabel(post.data.category)} · ${ym(post.data.date)}`;
 }
+
+/** 顶栏「标签」入口迁到右侧栏：窄栏只放高频前 10 个，完整索引交给「全部标签」链接 */
+const SIDE_TAG_COUNT = 10;
+const sideTags = getTagIndex(posts).slice(0, SIDE_TAG_COUNT);
 ---
 <BaseLayout title={SITE.name} description={SITE.description}>
   {/* 工具栏横跨整页宽度，右侧栏因此能与第一排卡片的顶端对齐 */}
@@ -55,6 +59,13 @@ function pickMeta(post: Post): string {
     <aside class="home-side">
       <section class="side-panel">
         <header>
+          <h2>简介</h2>
+        </header>
+        <p class="side-intro">企业研究（创业 · 商业 · 资本）与前沿 AI（现代 AI 沉淀）双线并行。把严肃的研究与前沿认知，讲得明白。</p>
+      </section>
+
+      <section class="side-panel">
+        <header>
           <h2>关注</h2>
           <a class="side-more" href="/about/">关于我 →</a>
         </header>
@@ -62,12 +73,12 @@ function pickMeta(post: Post): string {
           {SOCIALS.map((s) =>
             s.url ? (
               <a class="social-item" href={s.url} style={s.color ? { '--c': s.color } : undefined} target="_blank" rel="noopener noreferrer me">
-                <SocialIcon icon={s.icon} name={s.name} />
+                <SocialIcon icon={s.icon} />
                 <span class="social-label">{s.name}</span>
               </a>
             ) : (
               <span class="social-item social-todo" style={s.color ? { '--c': s.color } : undefined} title={`${s.name}：主页链接待补充`}>
-                <SocialIcon icon={s.icon} name={s.name} />
+                <SocialIcon icon={s.icon} />
                 <span class="social-label">{s.name}</span>
               </span>
             )
@@ -93,11 +104,22 @@ function pickMeta(post: Post): string {
           ))}
         </ol>
       </section>
+
+      <section class="side-panel">
+        <header>
+          <h2>标签</h2>
+          <a class="side-more" href="/tags/">全部标签 →</a>
+        </header>
+        {sideTags.length > 0 ? (
+          <div class="side-tags">
+            {sideTags.map(({ tag, count }) => (
+              <a class="side-tag" href={tagUrl(tag)}>#{tag}<span>{count}</span></a>
+            ))}
+          </div>
+        ) : (
+          <p class="side-empty">还没有标签。</p>
+        )}
+      </section>
     </aside>
   </div>
-
-  {/* 站点主张：放在正文末尾作收尾说明，避免首页顶部先压一大段介绍 */}
-  <section class="site-intro">
-    <p>企业研究（创业 · 商业 · 资本）与前沿 AI（现代 AI 沉淀）双线并行。把严肃的研究与前沿认知，讲得明白。</p>
-  </section>
 </BaseLayout>

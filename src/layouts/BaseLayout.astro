@@ -1,7 +1,6 @@
 ---
 import '../styles/global.css';
-import { SITE, CATEGORIES } from '../site';
-import { categoryUrl } from '../lib/posts';
+import { SITE } from '../site';
 
 interface Props {
   title: string;
@@ -83,10 +82,9 @@ const displayTitle = title === SITE.name ? title : `${title} · ${SITE.name}`;
           <input name="q" type="search" placeholder="搜索标题、标签、摘要…" autocomplete="off" />
         </form>
         <nav class="nav" id="nav">
+          {/* 桌面端整条 .nav 隐藏：分类与正文区工具条胶囊重复，首页交给 logo，
+              归档/标签在首页右侧栏，关于在页脚。≤720px 汉堡菜单仍列出这几个入口。 */}
           <a href="/">首页</a>
-          {Object.entries(CATEGORIES).map(([key, label]) => (
-            <a href={categoryUrl(key)}>{label}</a>
-          ))}
           <a href="/archive/">归档</a>
           <a href="/tags/">标签</a>
           <a href="/about/">关于</a>
@@ -102,6 +100,8 @@ const displayTitle = title === SITE.name ? title : `${title} · ${SITE.name}`;
       <div class="wrap">
         <span>© 2026 {SITE.author} · {SITE.name}</span>
         <span class="footer-links">
+          {/* 「关于」从顶栏移到这里：全站可达，且不占顶栏位置 */}
+          <a href="/about/">关于</a>
           {/* 平台入口已集中在首页侧栏「关注」区；Sitemap 由 robots.txt 声明给爬虫，都不必在页脚重复 */}
           <a href="/rss.xml">RSS</a>
         </span>

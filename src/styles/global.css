@@ -57,6 +57,12 @@ body{
 .nav{display:flex;gap:4px;}
 .nav a{padding:8px 14px;border-radius:8px;color:var(--ink2);font-size:14px;font-weight:500;transition:.15s;}
 .nav a:hover{background:var(--brand-bg);color:var(--brand);}
+/* 桌面端整条顶栏导航隐藏：分类与正文区工具条胶囊重复，首页由 logo 承载，
+   归档/标签在首页右侧栏，关于在页脚。断点与 .hamburger 的 720px 对齐，
+   ≤720px 的汉堡菜单仍需这几个入口。 */
+@media(min-width:721px){
+  .nav{display:none;}
+}
 /* 汉堡菜单 */
 .hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px;border:none;background:none;flex-shrink:0;}
 .hamburger span{display:block;width:22px;height:2px;background:var(--ink);border-radius:2px;transition:.2s;}
@@ -327,6 +333,13 @@ mark{background:var(--brand-bg);color:var(--brand);padding:0 2px;border-radius:3
 /* 还没填主页链接的平台：虚线描边、不可点击，提示这是占位而不是坏链 */
 .social-todo{border-style:dashed;background:transparent;color:var(--ink3);cursor:default;}
 .social-todo:hover{border-color:var(--line2);color:var(--ink3);background:transparent;transform:none;}
+/* 标签区：顶栏「标签」入口迁到此处。窄栏空间有限，只铺高频标签，计数弱化跟在词后 */
+.side-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;}
+.side-tag{display:inline-flex;align-items:baseline;gap:4px;padding:4px 10px;border-radius:999px;
+  border:1px solid var(--line2);background:var(--bg-card);font-size:13px;color:var(--ink2);transition:.15s;}
+.side-tag:hover{border-color:var(--brand2);background:var(--brand-bg);color:var(--brand);}
+.side-tag span{font-size:11px;color:var(--ink3);}
+.side-empty{font-size:13px;color:var(--ink3);margin:12px 0 0;}
 /* 通用文字榜单（404 最新文章等页面共用） */
 .topic-list{list-style:none;margin:0;padding:0;}
 .topic-list li{display:flex;align-items:baseline;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);}

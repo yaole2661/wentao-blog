@@ -61,18 +61,7 @@ const jsonLd = {
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
-  <div class="layout">
-    <aside class="toc-side">
-      {tocItems.length > 0 && (
-        <>
-          <div class="toc-title">目录</div>
-          <ol>
-            {tocItems.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}
-          </ol>
-        </>
-      )}
-    </aside>
-
+  <div class:list={['layout', { 'no-toc': tocItems.length === 0 }]}>
     <article class="post-main">
       <a class="btn-back" href={categoryUrl(category)}>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
@@ -139,6 +128,16 @@ const jsonLd = {
         <Comments />
       </div>
     </article>
+
+    {/* 桌面端目录放在正文右侧；窄屏改为 dock 按钮控制的悬浮面板。无标题时不渲染，避免空列挤占正文宽度 */}
+    {tocItems.length > 0 && (
+      <aside class="toc-side">
+        <div class="toc-title">目录</div>
+        <ol>
+          {tocItems.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}
+        </ol>
+      </aside>
+    )}
   </div>
 
   {(tocItems.length > 0 || prevPost || nextPost) && (

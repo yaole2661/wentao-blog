@@ -172,6 +172,30 @@ const displayTitle = title === SITE.name ? title : `${title} · ${SITE.name}`;
         }
       });
 
+      // ===== 顶栏智能隐藏：向下滚收起让位正文，向上滚立即浮出 =====
+      const header = document.querySelector<HTMLElement>('.site-header');
+      if (header) {
+        let lastY = window.scrollY;
+        let ticking = false;
+        const update = () => {
+          ticking = false;
+          const y = window.scrollY;
+          const delta = y - lastY;
+          if (Math.abs(delta) < 6) return; // 抖动阈值：小幅滚动不触发
+          // 汉堡菜单或外链弹框展开时不收顶栏，否则展开内容会被一起带出视口
+          const overlay = document.getElementById('nav')?.classList.contains('open')
+            || document.getElementById('extConfirm')?.classList.contains('open');
+          const hide = delta > 0 && y > header.offsetHeight && !overlay;
+          header.classList.toggle('is-hidden', hide);
+          lastY = y;
+        };
+        window.addEventListener('scroll', () => {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(update);
+        }, { passive: true });
+      }
+
       // ===== 外链二次确认 =====
       const extConfirm = document.getElementById('extConfirm');
       const extGo = document.getElementById('extGo') as HTMLAnchorElement | null;

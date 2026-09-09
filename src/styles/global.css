@@ -126,10 +126,15 @@ body{
   display:grid;grid-template-columns:240px 1fr;gap:44px;align-items:start;}
 /* 宽屏桌面：整体放大容器(页头/正文/页脚同步)，避免案板米色两侧留白过宽 */
 @media(min-width:1280px){
-  .wrap,.site-header .wrap,.layout{max-width:1200px;}
+  .wrap,.site-header .wrap,.layout{max-width:1280px;}
 }
 @media(min-width:1600px){
-  .wrap,.site-header .wrap,.layout{max-width:1340px;}
+  /* 超宽屏: 容器随视口扩展, 两侧米色固定只留 ~120px */
+  .wrap,.site-header .wrap,.layout{max-width:min(1640px, calc(100vw - 240px));}
+  .layout{grid-template-columns:260px 1fr;}
+  .post-main{padding:32px 36px 36px;}
+  /* 卡片变宽后正文行宽封顶, 多出的空间是卡片内留白, 保证可读性 */
+  .post-main>*{max-width:960px;}
 }
 /* 常驻：跟随正文滚动停在顶栏下方；目录过长时自身内部滚动，避免尾部条目看不见 */
 .toc-side{position:sticky;top:88px;align-self:start;font-size:14px;

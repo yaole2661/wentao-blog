@@ -23,7 +23,7 @@ export const CATEGORIES = {
 /**
  * 内容平台关注入口：首页侧栏「关注」区唯一数据源。
  * url 留空的条目渲染为不可点击的虚线占位，补上各平台主页链接即生效。
- * icon 对应 SocialIcon.astro 里的品牌标识；值为 'mono' 时暂无可靠官方矢量，先用文字占位。
+ * icon 对应 SocialIcon.astro 里的品牌标识：矢量取自公开图标集，位图取自各家官方应用图标。
  * color 取各家官方主色，只用于 hover 时给胶囊镀一点品牌色。
  */
 export interface Social {
@@ -40,10 +40,10 @@ export const SOCIALS: Social[] = [
   { name: '知乎', icon: 'zhihu', url: 'https://www.zhihu.com/people/ruo-teng-65', color: '#0084ff' },
   { name: '微博', icon: 'weibo', url: 'https://weibo.com/u/7421230864', color: '#e6162d' },
   { name: '豆瓣', icon: 'douban', url: 'https://www.douban.com/people/257047452/', color: '#2d963d' },
-  { name: '即刻', icon: 'mono', url: 'https://web.okjike.com/u/2ed6122a-985c-4e9b-965e-1287752906df' },
-  { name: '小宇宙', icon: 'mono', url: 'https://www.xiaoyuzhoufm.com/' },
-  { name: '知识星球', icon: 'mono', url: 'https://wx.zsxq.com/login' },
-  { name: '公众号', icon: 'wechat', url: '', color: '#07c160' },
+  { name: '即刻', icon: 'jike', url: 'https://web.okjike.com/u/2ed6122a-985c-4e9b-965e-1287752906df', color: '#ffe411' },
+  { name: '小宇宙', icon: 'xiaoyuzhou', url: 'https://www.xiaoyuzhoufm.com/', color: '#35b5d8' },
+  { name: '知识星球', icon: 'zhishixingqiu', url: 'https://wx.zsxq.com/login', color: '#00a281' },
+  { name: '公众号', icon: 'wechat', url: 'https://mp.weixin.qq.com/s/pMgtFyrDERdnW_vqEVk-4g', color: '#07c160' },
 ];
 
 export type CategoryKey = keyof typeof CATEGORIES;

@@ -174,10 +174,13 @@ body{
 .mobile-dock{display:none;}
 
 @media(max-width:860px){
-  .layout{grid-template-columns:1fr;padding:26px 0 84px;
+  .layout{grid-template-columns:1fr;padding:10px 0;
     /* 负 margin 抵消 .wrap 的 16px 边距，让正文卡片通栏、两侧不再露灰底 */
     margin:0 -16px;}
-  .post-main{padding:22px 14px 24px;border-radius:0;border-left:0;border-right:0;}
+  /* 上下只留 ~2mm 米色边条；dock 让位空间移入卡片内部（白底延伸，不压正文） */
+  .post-main{padding:22px 14px 64px;border-radius:0;border-left:0;border-right:0;}
+  /* 页底时 dock 不压 footer 文字 */
+  .site-footer{padding:24px 0 76px;}
   /* 目录改为左下角悬浮面板，由 dock 的「目录」按钮开合 */
   .toc-side{position:fixed;top:auto;right:auto;left:14px;order:unset;margin:0;
     bottom:calc(66px + env(safe-area-inset-bottom));width:min(280px,calc(100vw - 28px));

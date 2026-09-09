@@ -131,7 +131,7 @@ body{
 
 /* ===== Post ===== */
 .post-main{min-width:0;background:var(--bg-card);border:1px solid var(--line);
-  border-radius:16px;padding:32px 36px;box-shadow:var(--shadow);}
+  border-radius:16px;padding:28px 28px 32px;box-shadow:var(--shadow);}
 .btn-back{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border:1px solid var(--brand2);
   border-radius:999px;color:var(--brand);font-size:14px;font-weight:600;margin-bottom:24px;transition:.15s;}
 .btn-back:hover{background:var(--brand);color:#fff;}
@@ -175,7 +175,7 @@ body{
 
 @media(max-width:860px){
   .layout{grid-template-columns:1fr;padding-bottom:84px;}
-  .post-main{padding:26px 16px 28px;border-radius:12px;}
+  .post-main{padding:22px 14px 24px;border-radius:12px;}
   /* 目录改为左下角悬浮面板，由 dock 的「目录」按钮开合 */
   .toc-side{position:fixed;top:auto;right:auto;left:14px;order:unset;margin:0;
     bottom:calc(66px + env(safe-area-inset-bottom));width:min(280px,calc(100vw - 28px));

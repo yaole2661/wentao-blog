@@ -345,3 +345,20 @@ a.tag:hover{background:var(--brand);color:#fff;}
 .footer-links{display:flex;gap:16px;}
 .footer-links a{color:var(--ink3);}
 .footer-links a:hover{color:var(--brand);}
+
+/* ===== 外链二次确认弹框 ===== */
+.ext-confirm{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:24px;}
+.ext-confirm.open{display:flex;}
+.ext-confirm .mask{position:absolute;inset:0;background:rgba(20,18,40,.45);backdrop-filter:blur(2px);}
+.ext-dialog{position:relative;width:100%;max-width:400px;background:var(--bg-card);border:1px solid var(--line2);
+  border-radius:14px;padding:22px 22px 18px;box-shadow:var(--shadow);}
+.ext-dialog h2{margin:0 0 10px;font-size:17px;color:var(--ink);}
+.ext-dialog p{margin:0;font-size:14px;line-height:1.7;color:var(--ink2);}
+.ext-url{display:block;margin:10px 0 16px;padding:8px 10px;border-radius:8px;background:var(--bg-soft);
+  font-size:12px;color:var(--ink3);word-break:break-all;}
+.ext-actions{display:flex;justify-content:flex-end;gap:10px;}
+.ext-btn{display:inline-block;padding:8px 18px;border-radius:9px;border:1px solid var(--line2);
+  background:var(--bg-card);color:var(--ink2);font-size:14px;font-weight:600;cursor:pointer;transition:.15s;}
+.ext-btn:hover{border-color:var(--brand2);color:var(--brand);}
+.ext-btn.go{background:var(--brand);border-color:var(--brand);color:#fff;}
+.ext-btn.go:hover{background:var(--brand2);color:#fff;}

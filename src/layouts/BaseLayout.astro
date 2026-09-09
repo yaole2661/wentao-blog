@@ -107,6 +107,19 @@ const displayTitle = title === SITE.name ? title : `${title} · ${SITE.name}`;
         </span>
       </div>
     </footer>
+    <!-- 外链二次确认弹框：本站与目标页无关，提示访问风险 -->
+    <div class="ext-confirm" id="extConfirm" role="dialog" aria-modal="true" aria-labelledby="extTitle">
+      <div class="mask" data-close></div>
+      <div class="ext-dialog">
+        <h2 id="extTitle">离开本站</h2>
+        <p>你即将离开本站。该站点内容与本站无关，请注意甄别信息、保护隐私与财产安全。</p>
+        <span class="ext-url" id="extUrl"></span>
+        <div class="ext-actions">
+          <button class="ext-btn" type="button" data-close>取消</button>
+          <a class="ext-btn go" id="extGo" href="#" rel="noopener noreferrer nofollow" target="_blank">继续访问</a>
+        </div>
+      </div>
+    </div>
     <script>
       const btn = document.getElementById('themeBtn');
       const html = document.documentElement;
@@ -158,6 +171,33 @@ const displayTitle = title === SITE.name ? title : `${title} · ${SITE.name}`;
           nav.classList.remove('open');
         }
       });
+
+      // ===== 外链二次确认 =====
+      const extConfirm = document.getElementById('extConfirm');
+      const extGo = document.getElementById('extGo') as HTMLAnchorElement | null;
+      const extUrl = document.getElementById('extUrl');
+      const closeExt = () => extConfirm?.classList.remove('open');
+      document.addEventListener('click', (e) => {
+        const el = e.target as HTMLElement;
+        if (el.closest('[data-close]')) {
+          closeExt();
+          return;
+        }
+        // 弹框内部（含「继续访问」按钮）不拦截
+        if (el.closest('.ext-dialog')) return;
+        const link = el.closest<HTMLAnchorElement>('a[href]');
+        if (!link) return;
+        const url = new URL(link.href);
+        if (!/^https?:$/.test(url.protocol) || url.host === location.host) return;
+        e.preventDefault();
+        if (extGo) extGo.href = url.href;
+        if (extUrl) extUrl.textContent = url.href;
+        extConfirm?.classList.add('open');
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeExt();
+      });
+      extGo?.addEventListener('click', () => closeExt());
     </script>
   </body>
 </html>

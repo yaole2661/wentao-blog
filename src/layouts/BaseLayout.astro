@@ -33,6 +33,12 @@ const ogImage = new URL(
   Astro.site ?? Astro.url
 );
 const displayTitle = title === SITE.name ? title : `${title} · ${SITE.name}`;
+
+// Umami 访问统计：仅当构建期注入了 PUBLIC_UMAMI_* 环境变量时才接入脚本。
+// 未部署 Umami 时这两个值为空，脚本整段不渲染——不向第三方域发任何请求。
+// 以后只要在 Vercel 后台填 PUBLIC_UMAMI_SCRIPT_URL + PUBLIC_UMAMI_WEBSITE_ID，零改码即生效。
+const umamiScriptUrl = import.meta.env.PUBLIC_UMAMI_SCRIPT_URL as string | undefined;
+const umamiWebsiteId = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID as string | undefined;
 ---
 <!doctype html>
 <html lang={SITE.lang}>
@@ -79,6 +85,9 @@ const displayTitle = title === SITE.name ? title : `${title} · ${SITE.name}`;
         }
       })();
     </script>
+    {umamiScriptUrl && umamiWebsiteId && (
+      <script defer src={umamiScriptUrl} data-website-id={umamiWebsiteId} />
+    )}
     <slot name="head" />
   </head>
   <body>

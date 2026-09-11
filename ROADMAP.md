@@ -77,7 +77,7 @@ AIGC:
 
 | 优先级 | 动作 | 说明 |
 |---|---|---|
-| 内容-P0 | 补 `readingTime` + `series`/`order` frontmatter，全站展示 | 阅读时长用 remark 插件自动算；成果=列表项 `分类 · 日期 · 12 min · 第 3/12 篇` |
+| 内容-P0 | 补 `readingTime` + `series`/`order` frontmatter，全站展示 | **readingTime 工程侧已完成（2026-09-11）**：`src/lib/readingTime.ts` 按 CJK 字/英文词自动估算，文章页 + 卡片已展示「N 分钟读完」。`series`/`order` frontmatter 待写真实系列文章时再加 |
 | 内容-P0 | 建「研究看板」/`research/` | 中国/海外双栏 × 行业分组，每企业一张卡片；全站最有辨识度的一页 |
 | 内容-P0 | 治理标签 22 → 受控词表 | 拆「实体标签」（LVMH/华为/茶思屋）与「主题标签」（≤10 个），删 #茶思屋热点# 这类组合标签 |
 | 内容-P1 | URL 三层化 + 文章页顶部导航/底部连接 | `/research/` → `/series/<slug>/` → `/posts/<slug>/`；长文必加目录 |
@@ -112,6 +112,7 @@ AIGC:
 - **现状**：无任何统计，不知道流量从哪来、哪篇被读 —— 社交联动无法校准。
 - **动作**：部署 Umami（自托管，免 Cookie 合规负担）→ `Layout.astro` 加 `<script data-website-id=...>`；所有社交引流链接统一带 `utm_source`（wechat/zhihu/xhs/xiaoyuzhou）。
 - 这也是 `docs/社交平台联动策略方案.md` 闭环优化的数据前提。
+- **2026-09-11 工程侧已预铺（未部署 Umami 也不影响）**：`BaseLayout.astro` 已做「有 `PUBLIC_UMAMI_SCRIPT_URL` + `PUBLIC_UMAMI_WEBSITE_ID` 环境变量才注入统计脚本」的条件渲染；UTM 链接生成工具 `scripts/utm.mjs`（`npm run utm <路径> <平台>`）就绪。**待你部署 Umami 并在 Vercel 后台填这两个环境变量即生效**（零改码）。
 
 ### P0-4 主动提交中文搜索引擎 + 主动推送
 
@@ -119,6 +120,7 @@ AIGC:
 - **动作**：
   - 百度搜索资源平台：验证站点 → 提交 `sitemap-index.xml` → 拿「主动推送」token，构建完 `curl` 推一次。
   - Google Search Console + Bing Webmaster：提交 sitemap（顺手，原 P1 遗留项一并归此）。
+- **2026-09-11 工程侧已就绪**：`scripts/baidu-push.mjs`（`npm run push:baidu`）已写好——从 `dist/sitemap-*.xml` 提取线上 URL 批量 POST 给百度推送接口，token 读 `BAIDU_PUSH_TOKEN` 环境变量。**待你在百度站长平台验证站点并拿到 token 后即可一键推送**（依赖 P0-1 域名先统一）。
 
 ---
 
@@ -129,8 +131,8 @@ AIGC:
 - 补全站 `WebSite` + `SearchAction`（Google 结果页显示站内搜索框）。
 - 文章页补 `BreadcrumbList`。
 
-### P1-2 sitemap 加 lastmod
-- 现状每个 URL 只有 `<loc>`，无 `<lastmod>`。用 `@astrojs/sitemap` 的 `serialize` 回调写入 `lastmod`（取文章 `date`），提升收录优先级与抓取节奏。
+### P1-2 sitemap 加 lastmod ✅（2026-09-11 完成）
+- ~~现状每个 URL 只有 `<loc>`，无 `<lastmod>`~~。已在 `astro.config.mjs` 用 `serialize` 回调为 6 篇文章页写入 `updated ?? date` 作为 lastmod（构建期直接读 md frontmatter，取真实变更日而非构建时间——避免全站假新鲜）。列表/分类/标签页无独立变更日，刻意留空。
 
 ### P1-3 补全公众号主页链接
 - `src/site.ts` 里公众号 `url: ''` 待补。公众号是私域主阵地，补上后在首页「关注」区与「关于页」生效。

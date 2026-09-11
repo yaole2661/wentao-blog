@@ -8,7 +8,9 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "og": "node scripts/generate-og-images.mjs"
+    "og": "node scripts/generate-og-images.mjs",
+    "push:baidu": "node scripts/baidu-push.mjs",
+    "utm": "node scripts/utm.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",

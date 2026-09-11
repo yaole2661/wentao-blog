@@ -2,6 +2,7 @@
 import type { Post } from '../lib/posts';
 import { postUrl } from '../lib/posts';
 import { categoryLabel, formatDate } from '../site';
+import { readingTimeLabel } from '../lib/readingTime';
 
 interface Props {
   post: Post;
@@ -32,7 +33,7 @@ function mark(text: string): string {
     <div class="cover">{label}</div>
   )}
   <div class="card-body">
-    <div class="card-meta">{label} · {formatDate(date)}</div>
+    <div class="card-meta">{label} · {formatDate(date)} · {readingTimeLabel(post.body)}</div>
     <h3 set:html={mark(title)} />
     {summary && <p>{summary}</p>}
     {tags.length > 0 && (

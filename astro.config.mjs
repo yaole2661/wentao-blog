@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import { readdir, readFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { join, basename } from 'node:path';
 
 // 站点基础 URL：决定 sitemap / RSS 里的绝对地址与 canonical 的基准域。
 // 注意：src/site.ts 里的 SITE.url 必须与此处保持一致，它用于 canonical / OG / RSS 绝对链接。
@@ -49,7 +49,8 @@ async function buildLastmodMap() {
     const d = new Date(dateStr.replace(/^['"]|['"]$/g, ''));
     if (Number.isNaN(d.getTime())) continue;
     // 与 content.config.ts 的 generateId 保持一致：文件名去 .md、去 YYYY-MM-DD- 前缀
-    let name = file.slice(file.lastIndexOf('\\') + 1).replace(/\.md$/i, '');
+    // 用 basename 兼容 Windows(\) 与 Vercel/Linux(/) 两种路径分隔符
+    let name = basename(file).replace(/\.md$/i, '');
     if (/^\d{4}-\d{2}-\d{2}-/.test(name)) name = name.slice('0000-00-00-'.length);
     map.set(`/posts/${name}/`, d.toISOString().slice(0, 10));
   }

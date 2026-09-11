@@ -23,7 +23,15 @@ const {
   image,
 } = Astro.props;
 const canonical = new URL(path ?? Astro.url.pathname, Astro.site ?? Astro.url);
-const ogImage = new URL(image ?? '/og.svg', Astro.site ?? Astro.url);
+// 社交平台不渲染 SVG，og:image/twitter:image 一律指向 PNG 版本：
+//   /og.svg → /og.png；/covers/x.svg → /covers/og/x.png
+const ogImageSrc = image ?? '/og.svg';
+const ogImage = new URL(
+  ogImageSrc.startsWith('/covers/')
+    ? ogImageSrc.replace('/covers/', '/covers/og/').replace(/\.svg$/, '.png')
+    : ogImageSrc.replace(/\.svg$/, '.png'),
+  Astro.site ?? Astro.url
+);
 const displayTitle = title === SITE.name ? title : `${title} · ${SITE.name}`;
 ---
 <!doctype html>

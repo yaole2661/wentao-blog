@@ -24,7 +24,13 @@ pnpm-debug.log*
 .idea/
 
 .vercel
-.env*
+.env
+.env.production
+.env.local
+.env.*.local
+# 但保留 .env.example（部署模板，需要入库）
+!.env.example
+!**/.env.example
 
 # 临时工作目录与本地文档
 .tmp-icons/

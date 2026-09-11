@@ -1,0 +1,48 @@
+# Umami 访问统计自托管 —— 一键部署
+#
+# 用法（在 deploy/umami/ 目录下执行）：
+#   1) 复制 .env.example 为 .env，并填好两个随机密钥：APP_SECRET、POSTGRES_PASSWORD
+#   2) docker compose up -d
+#   3) 浏览器打开 http://<服务器IP>:3000 ，默认账号 admin / umami（登录后立即改密）
+#   4) 站点设置 → 新建网站（本博客）→ 复制「website-id 与 script URL」
+#   5) 到 Vercel 后台把 PUBLIC_UMAMI_SCRIPT_URL、PUBLIC_UMAMI_WEBSITE_ID 两个环境变量
+#      填入上面抄到的值 → Redeploy。前端注入脚本此前已预铺，填好即生效、零改码。
+#
+# 生产建议：
+#   - 前方加一层 Nginx/Caddy 反代 TLS，不要把 3000 裸端口暴露公网
+#   - 数据目录已挂载为 Docker volume umami-db-data，升级镜像不丢数据
+services:
+  umami:
+    image: ghcr.io/umami-software/umami:postgresql-latest
+    container_name: umami
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      # 这两项必须与下方 db 服务一致
+      DATABASE_URL: postgresql://umami:${POSTGRES_PASSWORD}@db:5432/umami
+      DATABASE_TYPE: postgres
+      # 会话加密密钥：生成方式 openssl rand -hex 32
+      APP_SECRET: ${APP_SECRET}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    container_name: umami-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: umami
+      POSTGRES_USER: umami
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - umami-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U umami -d umami']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  umami-db-data:

@@ -97,7 +97,9 @@ AIGC:
 
 - **现状**：代码声明裸域（`astro.config.mjs` 的 `site` 与 `src/site.ts` 的 `SITE.url` 均为 `https://fanwentao.cn`），但 Vercel 实际把裸域 `308` 跳转到 `https://www.fanwentao.cn/`。canonical / sitemap / robots / RSS 声明的是裸域，实际落地是 www —— 搜索引擎权重会被稀释、可能重复收录。
 - **修复（推荐方向①）**：Vercel 后台把主域名设为裸域 `fanwentao.cn`，让 `www` 反跳裸域。代码不用动（已是裸域）。
-- **2026-09-09 决策**：采纳方向①。2026-09-09 实测确认现状为裸域 308→www（www 返回 200）。待 Vercel 后台调整后重验。
+- **P0-1 状态（2026-09-11 实测）**：裸域 `fanwentao.cn` 仍 `308 → www.fanwentao.cn`，代码侧已声明裸域为唯一域（`site.ts` / `astro.config.mjs` / robots.txt 已带裸域 sitemap），domain 信号分裂会稀释权重。
+- **你需在 Vercel 后台操作（一次，5 分钟）**：项目 → Settings → Domains，在 `www.fanwentao.cn` 行设 **Redirect to `fanwentao.cn`**，并确认裸域行状态为可访问（无指向 www 的重定向）。改完告诉我。
+- **我接管**：你在后台改完后告诉我，我 curl 复验 `fanwentao.cn → 200` 且 `www → 308→裸域`，再全站查 canonical / OG / sitemap / RSS 均指向裸域。全部通过后 P0-1 才真正闭环。
 - 方向②（备选）：Vercel 保持现状，改代码两处 `site`/`url` 为 `https://www.fanwentao.cn/` 并重新部署。
 - 原则：**部署重定向方向** 与 **`site` 字段** 必须一致。
 
@@ -112,7 +114,10 @@ AIGC:
 - **现状**：无任何统计，不知道流量从哪来、哪篇被读 —— 社交联动无法校准。
 - **动作**：部署 Umami（自托管，免 Cookie 合规负担）→ `Layout.astro` 加 `<script data-website-id=...>`；所有社交引流链接统一带 `utm_source`（wechat/zhihu/xhs/xiaoyuzhou）。
 - 这也是 `docs/社交平台联动策略方案.md` 闭环优化的数据前提。
-- **2026-09-11 工程侧已预铺（未部署 Umami 也不影响）**：`BaseLayout.astro` 已做「有 `PUBLIC_UMAMI_SCRIPT_URL` + `PUBLIC_UMAMI_WEBSITE_ID` 环境变量才注入统计脚本」的条件渲染；UTM 链接生成工具 `scripts/utm.mjs`（`npm run utm <路径> <平台>`）就绪。**待你部署 Umami 并在 Vercel 后台填这两个环境变量即生效**（零改码）。
+- **已就绪（2026-09-11）**：
+  - 工程侧：`BaseLayout.astro` 已做「有 `PUBLIC_UMAMI_SCRIPT_URL` + `PUBLIC_UMAMI_WEBSITE_ID` 环境变量才注入统计脚本」的条件渲染；UTM 链接生成工具 `scripts/utm.mjs`（`npm run utm <路径> <平台>`）就绪。
+  - 部署侧：自托管文件 `deploy/umami/docker-compose.yml` + `.env.example` 已备（Umami + Postgres 一键起，挂 volume 保存数据）。
+  - **待你选择部署路径**：① 自托管（按 deploy/umami 注释一条命令起）② Vercel 市场一键部署 Umami ③ Umami Cloud。跑起来后在站点后台建「本博客」网站，拿到 website-id 与 script URL → 填进 Vercel 环境变量 → Redeploy 即生效，零改码。
 
 ### P0-4 主动提交中文搜索引擎 + 主动推送
 
@@ -121,6 +126,11 @@ AIGC:
   - 百度搜索资源平台：验证站点 → 提交 `sitemap-index.xml` → 拿「主动推送」token，构建完 `curl` 推一次。
   - Google Search Console + Bing Webmaster：提交 sitemap（顺手，原 P1 遗留项一并归此）。
 - **2026-09-11 工程侧已就绪**：`scripts/baidu-push.mjs`（`npm run push:baidu`）已写好——从 `dist/sitemap-*.xml` 提取线上 URL 批量 POST 给百度推送接口，token 读 `BAIDU_PUSH_TOKEN` 环境变量。**待你在百度站长平台验证站点并拿到 token 后即可一键推送**（依赖 P0-1 域名先统一）。
+- **操作清单（依赖 P0-1 完成后执行，域名统一用裸域 `fanwentao.cn`）**：
+  1. **百度**（重点）：ziyuan.baidu.com → 搜索服务 → 站点管理 → 添加站点 `https://fanwentao.cn` → 三种验证选 **「HTML 标签验证」**（在站点头部加一行 meta，兼容 SSG 静态站）→ 回到此仓库在 `BaseLayout.astro` 的 `<head>` 一次性加好，或选 **CNAME 验证**（在域名 DNS 加记录，更干净）→ 通过后在「普通收录 → 资源提交」复制 **token** → 填 `BAIDU_PUSH_TOKEN` 环境变量 → 我跑 `npm run push:baidu`。
+  2. **Google**：search.google.com/search-console → 添加资源 `https://fanwentao.cn` → 推荐 **DNS 验证**（万网 DNS 加 TXT 记录，一次生效永久，无需再动代码）→ 属性内提交 `sitemap`：`https://fanwentao.cn/sitemap-index.xml`。
+  3. **Bing**：bing.com/webmasters → 可用 **「从 GSC 导入」**（勾上 Google 属性即可，免二次验证）→ 提交同一 sitemap。
+- **我接管**：你完成任一平台验证后把 token / 验证截图给我，对应平台我立即操作（百度推送一键、Google/Bing 提交动作确认）。
 
 ---
 
